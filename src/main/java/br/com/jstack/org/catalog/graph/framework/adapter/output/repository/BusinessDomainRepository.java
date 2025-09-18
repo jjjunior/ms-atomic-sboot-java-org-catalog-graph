@@ -1,0 +1,20 @@
+package br.com.jstack.org.catalog.graph.framework.adapter.output.repository;
+
+import java.util.Optional;
+
+import br.com.jstack.org.catalog.graph.domain.node.BusinessDomainNode;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.neo4j.repository.query.Query;
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public interface BusinessDomainRepository extends Neo4jRepository<BusinessDomainNode, String> {
+	
+	@Query("""
+		MATCH (d:BusinessDomain{ tenantId:$tenantId, acronym:$acronym})
+		RETURN count(d) > 0 AS exists
+		""")
+	boolean existsByTenantAndAcronym(String tenantId, String acronym);
+	
+}
