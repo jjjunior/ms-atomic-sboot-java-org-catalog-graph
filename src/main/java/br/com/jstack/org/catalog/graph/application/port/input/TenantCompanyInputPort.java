@@ -3,13 +3,13 @@ package br.com.jstack.org.catalog.graph.application.port.input;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import br.com.jstack.org.catalog.graph.application.port.output.BusinessDomainOutputPort;
+import br.com.jstack.org.catalog.graph.application.port.output.TenantCompanyOutputPort;
 import br.com.jstack.org.catalog.graph.application.usecase.CreateUseCase;
 import br.com.jstack.org.catalog.graph.application.usecase.DeleteByIdUseCase;
 import br.com.jstack.org.catalog.graph.application.usecase.RetrieveAllUseCase;
 import br.com.jstack.org.catalog.graph.application.usecase.RetrieveByIdUseCase;
 import br.com.jstack.org.catalog.graph.application.usecase.UpdateUseCase;
-import br.com.jstack.org.catalog.graph.domain.model.BusinessDomain;
+import br.com.jstack.org.catalog.graph.domain.model.TenantCompany;
 import br.com.jstack.org.catalog.graph.domain.policy.PolicyResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,36 +19,36 @@ import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.UPDATE;
 
 @Component
 @RequiredArgsConstructor
-public class BusinessDomainInputPort implements
-	CreateUseCase<BusinessDomain>,
-	RetrieveByIdUseCase<BusinessDomain, String>,
-	RetrieveAllUseCase<BusinessDomain>,
-	UpdateUseCase<BusinessDomain>,
-	DeleteByIdUseCase<BusinessDomain, String> {
+public class TenantCompanyInputPort implements
+	CreateUseCase<TenantCompany>,
+	RetrieveByIdUseCase<TenantCompany, String>,
+	RetrieveAllUseCase<TenantCompany>,
+	UpdateUseCase<TenantCompany>,
+	DeleteByIdUseCase<TenantCompany, String> {
 	
-	private final BusinessDomainOutputPort       outputPort;
-	private final PolicyResolver<BusinessDomain> policyResolver;
+	private final TenantCompanyOutputPort       outputPort;
+	private final PolicyResolver<TenantCompany> policyResolver;
 	
 	@Override
-	public BusinessDomain create(BusinessDomain businessDomain) {
-		BusinessDomain domain = BusinessDomain.create(businessDomain,policyResolver.resolve(CREATE, BusinessDomain.class));
-		return outputPort.save(domain);
+	public TenantCompany create(TenantCompany tenantCompany) {
+		TenantCompany tenant = TenantCompany.create(tenantCompany,policyResolver.resolve(CREATE, TenantCompany.class));
+		return outputPort.save(tenant);
 	}
 	
 	@Override
-	public BusinessDomain retrieveById(String id) {
+	public TenantCompany retrieveById(String id) {
 		return outputPort.findById(id);
 	}
 	
 	@Override
-	public List<BusinessDomain> retrieveAll() {
+	public List<TenantCompany> retrieveAll() {
 		return outputPort.findAll().stream().collect(Collectors.toList());
 	}
 	
 	@Override
-	public BusinessDomain update(BusinessDomain businessDomain) {
-		BusinessDomain domain = businessDomain.update(businessDomain,policyResolver.resolve(UPDATE,BusinessDomain.class));
-		return outputPort.update(domain);
+	public TenantCompany update(TenantCompany tenantCompany) {
+		TenantCompany tenant = tenantCompany.updateName(tenantCompany.name(), policyResolver.resolve(UPDATE, TenantCompany.class));
+		return outputPort.update(tenant);
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package br.com.jstack.org.catalog.graph.domain.node;
 
 import java.time.LocalDateTime;
 
+import br.com.jstack.org.catalog.graph.domain.model.TenantCompany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,18 +14,15 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
 @Data
-@Node("BusinessDomain")
+@Node("TenantCompany")
 @AllArgsConstructor
 @NoArgsConstructor
-public class BusinessDomainNode {
+public class TenantCompanyNode {
 	
 	@Id
-	private String canonicalId;
 	private String tenantId;
-	private String acronym;
 	private String name;
-	private String description;
-	private String status;
+	private Status status;
 	
 	@CreatedDate
 	private LocalDateTime createdAt;
@@ -37,4 +35,6 @@ public class BusinessDomainNode {
 	
 	@LastModifiedBy
 	private String updatedBy;
+	
+	public enum Status { ACTIVE, INACTIVE }
 }

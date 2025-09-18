@@ -21,4 +21,13 @@ public class PolicyResolver<T> {
 			.findFirst()
 			.orElseThrow(() -> new IllegalStateException("No policy found for operation: " + operation + " and type: " + clazz.getSimpleName()));
 	}
+	
+	public <T> void validate(OperationType operation, T target, Class<T> clazz) {
+		resolve(operation, clazz).validate(target, operation);
+	}
+	
+	public <T> void validate(OperationType operation, T target) {
+		Class<T> clazz = (Class<T>) target.getClass();
+		resolve(operation, clazz).validate(target, operation);
+	}
 }

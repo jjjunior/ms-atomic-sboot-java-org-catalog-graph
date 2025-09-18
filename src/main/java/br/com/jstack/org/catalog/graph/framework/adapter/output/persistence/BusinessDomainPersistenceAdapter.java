@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class BusinessDomainPersistenceAdapter implements BusinessDomainOutputPort {
 	
-	private final BusinessDomainRepository businessDomainRepository;
+	private final BusinessDomainRepository repository;
 	
 	@Override
 	public boolean existsByTenantAndAcronym(String tenantId, String acronym) {
-		return businessDomainRepository.existsByTenantAndAcronym(tenantId, acronym);
+		return repository.existsByTenantAndAcronym(tenantId, acronym);
 	}
 	
 	@Transactional
@@ -30,9 +30,9 @@ public class BusinessDomainPersistenceAdapter implements BusinessDomainOutputPor
 	}
 	
 	@Override
-	public Optional<BusinessDomain> findById(String id) {
+	public BusinessDomain findById(String id) {
 //		return businessDomainRepository.findById(id);
-		return Optional.empty();
+		return null;
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class BusinessDomainPersistenceAdapter implements BusinessDomainOutputPor
 	@Transactional
 	@Override
 	public void deleteById(String id) {
-		businessDomainRepository.deleteById(id);
+		repository.deleteById(id);
 	}
 	
 	@Transactional

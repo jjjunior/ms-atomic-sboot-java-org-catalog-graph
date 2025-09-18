@@ -9,11 +9,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface BusinessDomainMapper {
 	
-	@Mapping(target = "updatedBy", ignore = true)
-	@Mapping(target = "updatedAt", ignore = true)
-	@Mapping(target = "createdBy", ignore = true)
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "canonicalId", ignore = true)
 	BusinessDomain toDomain(BusinessDomainRequest request);
 	
 	@Mapping(target = "audit.updatedBy", source = "updatedBy")

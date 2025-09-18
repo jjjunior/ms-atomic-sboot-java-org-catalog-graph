@@ -9,4 +9,12 @@ public interface ValidationPolicy<T> {
 	void validate(T target, OperationType operation);
 	
 	Class<T> getTargetType();
+	
+	default void validateCreate(T target) {
+		validate(target, OperationType.CREATE);
+	}
+	
+	default void validateUpdate(T target) {
+		validate(target, OperationType.UPDATE);
+	}
 }
