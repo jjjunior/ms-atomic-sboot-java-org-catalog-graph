@@ -4,20 +4,14 @@ spring:
       on-profile: local
 
   datasource:
-    url: jdbc:neo4j:bolt://localhost
+    url: jdbc:neo4j:bolt://localhost:7688
     username: neo4j
     password: test1234
     driver-class-name: org.neo4j.jdbc.bolt.BoltDriver
 
-  liquigraph:
-    changelog: classpath:/db/liquigraph/000-master.xml
-    enabled: true
-
-
-
   liquibase:
-    change-log: classpath:db/changelog/000-master.xml
     enabled: true
+    change-log: classpath:db/changelog/000-master.xml
 
 springdoc:
   swagger-ui:
