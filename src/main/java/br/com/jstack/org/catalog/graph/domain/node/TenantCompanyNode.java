@@ -2,7 +2,6 @@ package br.com.jstack.org.catalog.graph.domain.node;
 
 import java.time.LocalDateTime;
 
-import br.com.jstack.org.catalog.graph.domain.model.TenantCompany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

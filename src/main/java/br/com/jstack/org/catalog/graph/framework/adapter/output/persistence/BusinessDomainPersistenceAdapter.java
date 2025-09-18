@@ -1,7 +1,6 @@
 package br.com.jstack.org.catalog.graph.framework.adapter.output.persistence;
 
 import java.util.List;
-import java.util.Optional;
 
 import br.com.jstack.org.catalog.graph.application.port.output.BusinessDomainOutputPort;
 import br.com.jstack.org.catalog.graph.domain.model.BusinessDomain;
