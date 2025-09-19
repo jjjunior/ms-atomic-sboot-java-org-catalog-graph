@@ -1,0 +1,33 @@
+services:
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    restart: unless-stopped
+    ports:
+      # se 7474 já estiver em uso, troque para "7475:7474"
+      - "7475:7474"   # HTTP
+      - "7688:7687"   # Bolt
+    environment:
+      # defina a senha do usuário 'neo4j'
+      NEO4J_AUTH: neo4j/test1234
+      # aceita a licença (necessário em algumas features/plugins)
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+
+      # habilita o plugin APOC (mais comum para testes)
+      NEO4J_PLUGINS: '["apoc"]'
+
+      # Permissões úteis do APOC para importar/exportar arquivos
+      NEO4J_apoc_export_file_enabled: "true"
+      NEO4J_apoc_import_file_enabled: "true"
+      NEO4J_apoc_import_file_use__neo4j__config: "true"
+
+      # libera chamadas de procedimentos apoc.*
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
+    volumes:
+      - neo4j-data:/var/lib/neo4j/data
+      - neo4j-logs:/var/lib/neo4j/logs
+      - neo4j-import:/var/lib/neo4j/import
+volumes:
+  neo4j-data:
+  neo4j-logs:
+  neo4j-import:

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- Ambiente LOCAL com log colorido e formatado -->
+    <springProfile name="local">
+        <appender name="COLORED_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%logger{36}): %msg%n%throwable
+                </pattern>
+            </encoder>
+        </appender>
+
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="com.zaxxer.hikari" level="DEBUG"/>
+        <logger name="br.com" level="DEBUG"/>
+        <root level="DEBUG">
+            <appender-ref ref="COLORED_CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- Ambientes DES, UAT e PRD com saída JSON -->
+    <springProfile name="des,uat,prd">
+        <appender name="JSON_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp>
+                        <timeZone>UTC</timeZone>
+                    </timestamp>
+                    <logLevel/>
+                    <threadName/>
+                    <loggerName/>
+                    <message/>
+                    <arguments/>
+                    <stackTrace/>
+                    <mdc/>
+                </providers>
+            </encoder>
+        </appender>
+
+        <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="JSON_STDOUT"/>
+            <queueSize>500</queueSize>
+        </appender>
+
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="com.zaxxer.hikari" level="DEBUG"/>
+        <logger name="br.com" level="DEBUG"/>
+        <root level="WARN">
+            <appender-ref ref="ASYNC"/>
+        </root>
+    </springProfile>
+</configuration>

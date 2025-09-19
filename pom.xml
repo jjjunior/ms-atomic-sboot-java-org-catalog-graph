@@ -1,0 +1,30 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>br.com.jstack.platform</groupId>
+        <artifactId>starter-atomic-neo4j-spring-boot</artifactId>
+        <version>1.0.79</version>
+    </parent>
+
+    <groupId>br.com.jstack.org.catalog.graph</groupId>
+    <artifactId>ms-atomic-sboot-java-org-catalog-graph</artifactId>
+    <name>ms-atomic-sboot-java-org-catalog-graph</name>
+    <version>0.0.1</version>
+
+    <properties>
+        <package>${project.groupId}</package>
+        <openapi.inputSpec>
+            ${project.basedir}/src/main/resources/api/contract/ms-atomic-sboot-java-org-catalog-graph.yaml
+        </openapi.inputSpec>
+    </properties>
+
+    <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
+    </dependencies>
+
+</project>

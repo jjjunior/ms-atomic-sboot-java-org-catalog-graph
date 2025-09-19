@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ms-atomic-sboot-java-org-catalog-graph
+  profiles:
+    default: local
+  main:
+    banner-mode: "off"
+    allow-bean-definition-overriding: false
+    allow-circular-references: false
+  beaninfo:
+    ignore: true
+
+logging:
+  level:
+    root: INFO

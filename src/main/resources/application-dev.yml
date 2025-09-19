@@ -1,0 +1,37 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:neo4j:bolt://localhost
+    username: neo4j
+    password: test1234
+    driver-class-name: org.neo4j.jdbc.bolt.BoltDriver
+
+  liquigraph:
+    changelog: classpath:/db/liquigraph/000-master.xml
+    enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: false
+
+management:
+  server:
+    port: 9090
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, prometheus
