@@ -1,7 +1,10 @@
-# Compiled class file
+########################################
+# Java / Spring Boot
+########################################
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
 
 # BlueJ files
@@ -10,7 +13,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
@@ -19,49 +22,93 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Virtual machine crash logs
 hs_err_pid*
 replay_pid*
-/target/generated-sources/openapi/.openapi-generator-ignore
-/target/classes/db/liquigraph/000-master.xml
-/target/classes/db/liquigraph/001-create-indexes.xml
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/api/ApiUtil.java
-/target/classes/application.yaml
-/target/classes/application-dev.yml
-/target/classes/application-local.yml
-/target/classes/application-prd.yaml
-/target/classes/application-uat.yml
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/Audit.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/api/BusinessDomainApi.java
-/target/generated-sources/annotations/br/com/jstack/org/catalog/graph/framework/adapter/mapper/BusinessDomainMapperImpl.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/BusinessDomainRequest.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/BusinessDomainResponse.java
-/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/ErrorResponse.java
-/target/generated-sources/openapi/.openapi-generator/FILES
-/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
-/target/classes/liquigraph.properties
-/target/classes/logback-spring.xml
-/target/classes/api/contract/ms-atomic-sboot-java-org-catalog-graph.yaml
-/target/generated-sources/openapi/.openapi-generator/ms-atomic-sboot-java-org-catalog-graph.yaml-generate-api.sha256
-/target/ms-atomic-sboot-java-org-catalog-graph-0.0.1.jar.original
-/target/maven-archiver/pom.properties
-/target/generated-sources/openapi/pom.xml
-/target/generated-sources/openapi/README.md
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/api/ResponsibilityTypeApi.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/ResponsibilityTypeRequest.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/ResponsibilityTypeResponse.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/api/SystemAcronymApi.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/SystemAcronymRequest.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/SystemAcronymResponse.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/api/SystemAcronymResponsibilityApi.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/SystemAcronymResponsibilityRequest.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/SystemAcronymResponsibilityResponse.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/api/SystemAcronymTypeApi.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/SystemAcronymTypeRequest.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/SystemAcronymTypeResponse.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/api/TeamApi.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/TeamRequest.java
-/target/generated-sources/openapi/src/gen/java/br/com/jstack/org/catalog/graph/model/TeamResponse.java
-/target/classes/ValidationMessages.properties
-/target/generated-sources/openapi/.openapi-generator/VERSION
+
+# Spring Boot devtools
+.spring-boot-devtools.properties
+
+########################################
+# Maven
+########################################
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+########################################
+# Gradle
+########################################
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Eclipse Gradle plugin generated files
+.gradle/
+build/
+
+# Gradle caches
+.gradle/
+out/
+
+########################################
+# IntelliJ IDEA
+########################################
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# IntelliJ out folder
+out/
+
+# Sonarlint plugin files
+.sonarlint/
+
+# User-specific files
+*.sw?
+*.DS_Store
+
+########################################
+# OS-specific
+########################################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Linux
+*~
+.nfs*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+########################################
+# Others
+########################################
+# VS Code (caso alguém use)
+.vscode/
+
+# Docker
+**/docker-compose.override.yml
+**/.docker/
+
+# Logs & temp
+logs/
+*.tmp
+*.bak
+*.swp
+
+# IDE caches
+.project
+.classpath
+.settings/

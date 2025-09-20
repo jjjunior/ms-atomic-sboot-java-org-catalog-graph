@@ -1,7 +1,9 @@
 package br.com.jstack.org.catalog.graph.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import br.com.jstack.org.catalog.graph.domain.node.TenantCompanyNode;
 import br.com.jstack.org.catalog.graph.domain.policy.ValidationPolicy;
 import br.com.jstack.org.catalog.graph.domain.vo.DomainStatus;
 import lombok.Builder;
@@ -21,6 +23,7 @@ import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.UPDATE;
 @Builder(toBuilder = true)
 public record BusinessDomain(
 	String tenantId,
+	@With
 	String canonicalId,
 	String acronym,
 	String name,
@@ -37,7 +40,9 @@ public record BusinessDomain(
 	LocalDateTime approvedAt,
 	LocalDateTime rejectedAt,
 	@With
-	String rejectionReason
+	String rejectionReason,
+	
+	Set<TenantCompanyNode> tenantCompanies
 ) {
 	/**
 	 * Factory for CREATE operation.<p>

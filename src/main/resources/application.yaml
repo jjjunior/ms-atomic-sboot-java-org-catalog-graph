@@ -13,3 +13,5 @@ spring:
 logging:
   level:
     root: INFO
+    org.springframework.data.neo4j: DEBUG
+    org.neo4j.driver: DEBUG

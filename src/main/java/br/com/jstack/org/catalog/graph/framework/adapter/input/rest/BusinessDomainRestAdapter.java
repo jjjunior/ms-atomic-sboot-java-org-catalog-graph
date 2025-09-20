@@ -13,7 +13,6 @@ import br.com.jstack.org.catalog.graph.domain.model.BusinessDomain;
 import br.com.jstack.org.catalog.graph.framework.adapter.mapper.BusinessDomainMapper;
 import br.com.jstack.org.catalog.graph.model.BusinessDomainRequest;
 import br.com.jstack.org.catalog.graph.model.BusinessDomainResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,18 +30,18 @@ public class BusinessDomainRestAdapter implements BusinessDomainApi {
 	private final DeleteByIdUseCase<BusinessDomain, String>   deleteUseCase;
 	
 	@Override
-	public ResponseEntity<BusinessDomainResponse> createBusinessDomain(@Valid BusinessDomainRequest request) {
-		BusinessDomain businessDomain = mapper.toDomain(request);
+	public ResponseEntity<BusinessDomainResponse> createBusinessDomain(BusinessDomainRequest businessDomainRequest) {
+		BusinessDomain businessDomain = mapper.toDomain(businessDomainRequest);
 		
 		BusinessDomain         created  = createUseCase.create(businessDomain);
 		BusinessDomainResponse response = mapper.toResponse(created);
-		
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@Override
-	public ResponseEntity<Void> deleteBusinessDomain(String uuid) {
-		deleteUseCase.deleteById(uuid);
+	public ResponseEntity<Void> deleteBusinessDomain(String canonicalId) {
+		deleteUseCase.deleteById(canonicalId);
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -52,22 +51,22 @@ public class BusinessDomainRestAdapter implements BusinessDomainApi {
 		List<BusinessDomainResponse> responses = businessDomains.stream()
 			.map(mapper::toResponse)
 			.collect(Collectors.toList());
-		
+
 		return ResponseEntity.ok(responses);
 	}
 	
 	@Override
-	public ResponseEntity<BusinessDomainResponse> retrieveBusinessDomain(String id) {
-		BusinessDomain         businessDomain = retrieveByIdUseCase.retrieveById(id);
+	public ResponseEntity<BusinessDomainResponse> retrieveBusinessDomain(String canonicalId) {
+		BusinessDomain businessDomain = retrieveByIdUseCase.retrieveById(canonicalId);
 		BusinessDomainResponse response       = mapper.toResponse(businessDomain);
 		
 		return ResponseEntity.ok(response);
 	}
 	
 	@Override
-	public ResponseEntity<BusinessDomainResponse> updateBusinessDomain(String uuid, @Valid BusinessDomainRequest request) {
-		BusinessDomain businessDomain = mapper.toDomain(request);
-//		businessDomain.setId(uuid);
+	public ResponseEntity<BusinessDomainResponse> updateBusinessDomain(String canonicalId, BusinessDomainRequest businessDomainRequest) {
+		BusinessDomain businessDomain = mapper.toDomain(businessDomainRequest);
+		businessDomain.withCanonicalId(canonicalId);
 		
 		BusinessDomain         updated  = updateUseCase.update(businessDomain);
 		BusinessDomainResponse response = mapper.toResponse(updated);
