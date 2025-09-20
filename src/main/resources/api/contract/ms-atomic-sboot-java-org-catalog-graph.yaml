@@ -379,25 +379,27 @@ components:
   schemas:
     TenantCompanyRequest:
       type: object
-      required: [ name, status ]
+      required: [ tenantId, name ]
       properties:
+        tenantId:
+          type: string
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=2, max=10, message="{br.com.jstack.request.tenant.size}")
         name:
           type: string
           x-field-extra-annotation: |
-            @jakarta.validation.constraints.Size(min=5, max=30, message="{br.com.jstack.request.size}")
+            @jakarta.validation.constraints.Size(min=2, max=30, message="{br.com.jstack.request.tenant.size}")
         status:
           type: string
           enum: [ ACTIVE, INACTIVE, DEPRECATED ]
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.NotNull(message="{br.com.jstack.request.status.notnull}")
+#          x-field-extra-annotation: |
+#            @jakarta.validation.constraints.NotNull(message="{br.com.jstack.request.tenant.status.notnull}")
 
     TenantCompanyResponse:
       allOf:
         - $ref: '#/components/schemas/TenantCompanyRequest'
         - type: object
           properties:
-            tenantId:
-              type: string
             audit:
               $ref: '#/components/schemas/Audit'
 
@@ -408,11 +410,11 @@ components:
         canonicalId:
           type: string
           description: "Canonical identifier of the domain. Format: domain:<tenantId>/<acronym> (e.g., domain:rd/FINANCE)"
-          example: "domain:rd/FINANCE"
+          example: "domain:rd/fina"
           x-field-extra-annotation: |
             @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.canonicalid.notblank}")
             @jakarta.validation.constraints.Pattern(
-              regexp="^domain:[a-z0-9-]{2,20}/[A-Z]{4,10}$",
+              regexp="^domain:[a-z0-9-]{2,10}/[a-z0-9-]{5,30}$",
               message="{br.com.jstack.request.domain.canonicalid.pattern}"
             )
         tenantId:
@@ -427,12 +429,12 @@ components:
             )
         acronym:
           type: string
-          description: "Domain acronym (4–10 uppercase letters)"
-          example: "FINANCE"
+          description: "Domain acronym (4–lowercase letters)"
+          example: "finc"
           x-field-extra-annotation: |
             @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.acronym.notblank}")
             @jakarta.validation.constraints.Pattern(
-              regexp="^[A-Z]{4,10}$",
+              regexp="^[a-z]{4}$",
               message="{br.com.jstack.request.domain.acronym.pattern}"
             )
         name:
@@ -457,6 +459,8 @@ components:
               regexp="^(ACTIVE|DEPRECATED|INACTIVE)$",
               message="{br.com.jstack.request.domain.status.pattern}"
             )
+        rejectionReason:
+          type: string
 
     BusinessDomainResponse:
       type: object
@@ -485,6 +489,18 @@ components:
           type: string
           description: "Domain status (ACTIVE, DEPRECATED, INACTIVE)"
           example: "ACTIVE"
+        rejectedBy:
+          type: string
+        rejectedAt:
+          type: string
+          format: date-time
+        approvedBy:
+          type: string
+        approvedAt:
+          type: string
+          format: date-time
+        rejectionReason:
+          type: string
         audit:
           $ref: '#/components/schemas/Audit'
 
