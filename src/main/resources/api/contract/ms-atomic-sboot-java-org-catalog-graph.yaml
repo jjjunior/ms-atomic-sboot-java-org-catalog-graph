@@ -7,39 +7,28 @@ servers:
     description: DES
   - url: https://system-acronym.uat.jstack.com.br
     description: UAT
-  - url: https://system-acronym.jstack.br.com.br
+  - url: https://system-acronym.jstack.com.br
     description: PRD
 security:
   - bearerAuth: [ ]
 tags:
-  - name: Team
-  - name: ResponsibilityType
+  - name: TenantCompany
   - name: BusinessDomain
-  - name: SystemAcronym
-  - name: SystemAcronymType
-  - name: SystemAcronymResponsibility
 paths:
-  /v1/teams:
+  /v1/tenant-companies:
     get:
-      tags:
-        - Team
-      summary: List teams
-      operationId: listTeams
+      tags: [ TenantCompany ]
+      summary: List Tenants
+      operationId: listTenants
       responses:
         '200':
-          description: List of teams
+          description: List of tenants (may be empty)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TeamResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                  $ref: '#/components/schemas/TenantCompanyResponse'
         '401':
           description: Unauthorized
           content:
@@ -53,23 +42,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     post:
-      tags:
-        - Team
-      summary: Create a team
-      operationId: createTeam
+      tags: [ TenantCompany ]
+      summary: Create a tenant
+      operationId: createTenant
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TeamRequest'
+              $ref: '#/components/schemas/TenantCompanyRequest'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamResponse'
+                $ref: '#/components/schemas/TenantCompanyResponse'
         '400':
           description: Bad Request
           content:
@@ -88,26 +76,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/teams/{id}:
+
+  /v1/tenant-companies/{tenantId}:
     get:
-      tags:
-        - Team
-      summary: Get team by ID
-      operationId: retrieveTeam
+      tags: [ TenantCompany ]
+      summary: Get Tenant by ID
+      operationId: retrieveTenant
       parameters:
-        - name: id
+        - name: tenantId
           in: path
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
-          description: Team details
+          description: Tenant details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamResponse'
+                $ref: '#/components/schemas/TenantCompanyResponse'
         '404':
           description: Not Found
           content:
@@ -127,30 +114,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     put:
-      tags:
-        - Team
-      summary: Update team
-      operationId: updateTeam
+      tags: [ TenantCompany ]
+      summary: Update tenant
+      operationId: updateTenant
       parameters:
-        - name: id
+        - name: tenantId
           in: path
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TeamRequest'
+              $ref: '#/components/schemas/TenantCompanyRequest'
       responses:
         '200':
           description: Updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamResponse'
+                $ref: '#/components/schemas/TenantCompanyResponse'
         '400':
           description: Bad Request
           content:
@@ -176,17 +161,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
-      tags:
-        - Team
-      summary: Delete team
-      operationId: deleteTeam
+      tags: [ TenantCompany ]
+      summary: Delete Tenant
+      operationId: deleteTenant
       parameters:
-        - name: id
+        - name: tenantId
           in: path
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '204':
           description: Deleted
@@ -208,594 +191,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/responsibility-types:
-    get:
-      tags:
-        - ResponsibilityType
-      summary: List responsibility types
-      operationId: listResponsibilityTypes
-      responses:
-        '200':
-          description: List
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ResponsibilityTypeResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    post:
-      tags:
-        - ResponsibilityType
-      summary: Create responsibility type
-      operationId: createResponsibilityType
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResponsibilityTypeRequest'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponsibilityTypeResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/responsibility-types/{id}:
-    get:
-      tags:
-        - ResponsibilityType
-      summary: Get responsibility type by ID
-      operationId: retrieveResponsibilityType
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Responsibility type
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponsibilityTypeResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      tags:
-        - ResponsibilityType
-      summary: Update responsibility type
-      operationId: updateResponsibilityType
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResponsibilityTypeRequest'
-      responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponsibilityTypeResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - ResponsibilityType
-      summary: Delete responsibility type
-      operationId: deleteResponsibilityType
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '204':
-          description: Deleted
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/system-acronym-responsibilities:
-    get:
-      tags:
-        - SystemAcronymResponsibility
-      summary: List system acronym responsibilities
-      operationId: listSystemAcronymResponsibilities
-      responses:
-        '200':
-          description: List of system acronym responsibilities
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SystemAcronymResponsibilityResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    post:
-      tags:
-        - SystemAcronymResponsibility
-      summary: Create a system acronym responsibility
-      operationId: createSystemAcronymResponsibility
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SystemAcronymResponsibilityRequest'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymResponsibilityResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/system-acronym-responsibilities/{id}:
-    get:
-      tags:
-        - SystemAcronymResponsibility
-      summary: Get system acronym responsibility by ID
-      operationId: retrieveSystemAcronymResponsibility
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: System acronym responsibility
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymResponsibilityResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      tags:
-        - SystemAcronymResponsibility
-      summary: Update system acronym responsibility
-      operationId: updateSystemAcronymResponsibility
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SystemAcronymResponsibilityRequest'
-      responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymResponsibilityResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - SystemAcronymResponsibility
-      summary: Delete system acronym responsibility
-      operationId: deleteSystemAcronymResponsibility
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '204':
-          description: Deleted
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/system-acronym-types:
-    get:
-      tags:
-        - SystemAcronymType
-      summary: List acronym types
-      operationId: listAcronymTypes
-      responses:
-        '200':
-          description: List
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SystemAcronymTypeResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    post:
-      tags:
-        - SystemAcronymType
-      summary: Create a Acronym Type
-      operationId: createAcronymType
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SystemAcronymTypeRequest'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymTypeResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/system-acronym-types/{id}:
-    get:
-      tags:
-        - SystemAcronymType
-      summary: Get system acronym type by ID
-      operationId: retrieveSystemAcronymType
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: System acronym type
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymTypeResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      tags:
-        - SystemAcronymType
-      summary: Update system acronym type
-      operationId: updateSystemAcronymType
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SystemAcronymTypeRequest'
-      responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymTypeResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - SystemAcronymType
-      summary: Delete system acronym type
-      operationId: deleteSystemAcronymType
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '204':
-          description: Deleted
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+
   /v1/business-domains:
     get:
-      tags:
-        - BusinessDomain
+      tags: [ BusinessDomain ]
       summary: List business domains
       operationId: listBusinessDomains
       responses:
         '200':
-          description: List
+          description: List (may be empty)
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/BusinessDomainResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Unauthorized
           content:
@@ -809,8 +219,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     post:
-      tags:
-        - BusinessDomain
+      tags: [ BusinessDomain ]
       summary: Create business domain
       operationId: createBusinessDomain
       requestBody:
@@ -844,14 +253,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/business-domains/{id}:
+
+  /v1/business-domains/{canonicalId}:
     get:
-      tags:
-        - BusinessDomain
+      tags: [ BusinessDomain ]
       summary: Get business domain by id
       operationId: retrieveBusinessDomain
       parameters:
-        - name: id
+        - name: canonicalId
           in: path
           required: true
           schema:
@@ -882,12 +291,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     put:
-      tags:
-        - BusinessDomain
+      tags: [ BusinessDomain ]
       summary: Update business domain
       operationId: updateBusinessDomain
       parameters:
-        - name: id
+        - name: canonicalId
           in: path
           required: true
           schema:
@@ -930,12 +338,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
-      tags:
-        - BusinessDomain
+      tags: [ BusinessDomain ]
       summary: Delete business domain
       operationId: deleteBusinessDomain
       parameters:
-        - name: id
+        - name: canonicalId
           in: path
           required: true
           schema:
@@ -961,400 +368,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/system-acronyms:
-    get:
-      tags:
-        - SystemAcronym
-      summary: List System Acronyms
-      operationId: listSystemAcronyms
-      parameters:
-        - name: active
-          in: query
-          schema:
-            type: boolean
-        - name: typeId
-          in: query
-          schema:
-            type: integer
-            format: int64
-        - name: domainId
-          in: query
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: List of system acronyms
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SystemAcronymResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    post:
-      tags:
-        - SystemAcronym
-      summary: Create a system acronym
-      operationId: createSystemAcronym
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SystemAcronymRequest'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/system-acronyms/{id}:
-    get:
-      tags:
-        - SystemAcronym
-      summary: Get system acronym by ID
-      operationId: retrieveSystemAcronym
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: System acronym details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      tags:
-        - SystemAcronym
-      summary: Update system acronym
-      operationId: updateSystemAcronym
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SystemAcronymRequest'
-      responses:
-        '200':
-          description: Updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemAcronymResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - SystemAcronym
-      summary: Soft delete a system acronym
-      operationId: deleteSystemAcronym
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '204':
-          description: Deleted
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
   schemas:
-    SystemAcronymTypeRequest:
+    TenantCompanyRequest:
       type: object
-      required:
-        - name
-        - description
+      required: [ name, status ]
       properties:
         name:
           type: string
-          x-field-extra-annotation: '@Size(min=5,max=30, message = "{br.com.jstack.request.size}")'
-        description:
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=5, max=30, message="{br.com.jstack.request.size}")
+        status:
           type: string
-          x-field-extra-annotation: '@Size(min=10,max=255, message = "{br.com.jstack.request.size}")'
-        active:
-          type: boolean
-    SystemAcronymTypeResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        SystemAcronymType:
-          $ref: '#/components/schemas/SystemAcronymTypeRequest'
-        Audit:
-          $ref: '#/components/schemas/Audit'
-    SystemAcronymRequest:
-      type: object
-      required:
-        - name
-      properties:
-        acronym:
-          type: string
-          minLength: 1
-        name:
-          type: string
-          x-field-extra-annotation: '@Size(min=5,max=30, message = "{br.com.jstack.request.size}")'
-        description:
-          type: string
-          x-field-extra-annotation: '@Size(min=10,max=255, message = "{br.com.jstack.request.size}")'
-        domainId:
-          type: integer
-          format: int64
-        typeId:
-          type: integer
-          format: int64
-        dev_team_id:
-          type: integer
-          format: int64
-        biz_team_id:
-          type: integer
-          format: int64
-        product_owner_name:
-          type: string
-        contact_email:
-          type: string
-        critical_for_operation:
-          type: boolean
-        has_personal_data:
-          type: boolean
-        security_level:
-          type: string
-        compliance_requirements:
-          type: string
-        documentation_url:
-          type: string
-        lifecycle_status:
-          type: string
-        go_live_date:
-          type: string
-          format: date
-        sunset_date:
-          type: string
-          format: date
-        active:
-          type: boolean
-    SystemAcronymResponse:
-      properties:
-        id:
-          type: integer
-          format: int64
-        SystemAcronym:
-          $ref: '#/components/schemas/SystemAcronymRequest'
-        Audit:
-          $ref: '#/components/schemas/Audit'
-    TeamRequest:
-      type: object
-      required:
-        - name
-        - description
-      properties:
-        name:
-          type: string
-          x-field-extra-annotation: '@Size(min=5,max=30, message = "{br.com.jstack.request.size}")'
-        description:
-          type: string
-          x-field-extra-annotation: '@Size(min=10,max=255, message = "{br.com.jstack.request.size}")'
-    TeamResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        Team:
-          $ref: '#/components/schemas/TeamRequest'
-        Audit:
-          $ref: '#/components/schemas/Audit'
-    ResponsibilityTypeRequest:
-      type: object
-      required:
-        - name
-        - description
-      properties:
-        name:
-          type: string
-          x-field-extra-annotation: '@Size(min=5,max=30, message = "{br.com.jstack.request.size}")'
-        description:
-          type: string
-          x-field-extra-annotation: '@Size(min=10,max=255, message = "{br.com.jstack.request.size}")'
-        active:
-          type: boolean
-    ResponsibilityTypeResponse:
-      properties:
-        id:
-          type: integer
-          format: int64
-        ResponsibilityType:
-          $ref: '#/components/schemas/ResponsibilityTypeRequest'
-        Audit:
-          $ref: '#/components/schemas/Audit'
-    SystemAcronymResponsibilityRequest:
-      type: object
-      required:
-        - acronymId
-        - responsibilityId
-        - teamId
-      properties:
-        acronymId:
-          type: integer
-          format: int64
-        name:
-          type: string
-          x-field-extra-annotation: '@Size(min=5,max=30, message = "{br.com.jstack.request.size}")'
-        description:
-          type: string
-          x-field-extra-annotation: '@Size(min=10,max=255, message = "{br.com.jstack.request.size}")'
-        responsibilityId:
-          type: integer
-          format: int64
-        teamId:
-          type: integer
-          format: int64
-        active:
-          type: boolean
-    SystemAcronymResponsibilityResponse:
-      properties:
-        id:
-          type: integer
-          format: int64
-        SystemAcronymResponsibility:
-          $ref: '#/components/schemas/SystemAcronymResponsibilityRequest'
-        Audit:
-          $ref: '#/components/schemas/Audit'
+          enum: [ ACTIVE, INACTIVE, DEPRECATED ]
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.NotNull(message="{br.com.jstack.request.status.notnull}")
+
+    TenantCompanyResponse:
+      allOf:
+        - $ref: '#/components/schemas/TenantCompanyRequest'
+        - type: object
+          properties:
+            tenantId:
+              type: string
+            audit:
+              $ref: '#/components/schemas/Audit'
+
     BusinessDomainRequest:
       type: object
-      required:
-        - tenantId
-        - acronym
-        - name
+      required: [ tenantId, acronym, name, status, canonicalId ]
       properties:
         canonicalId:
           type: string
-          description: "Canonical identifier of the domain. Format: domain:<tenantId>/<acronym> (e.g., domain:rd/finance)"
-          example: "domain:rd/finance"
+          description: "Canonical identifier of the domain. Format: domain:<tenantId>/<acronym> (e.g., domain:rd/FINANCE)"
+          example: "domain:rd/FINANCE"
           x-field-extra-annotation: |
             @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.canonicalid.notblank}")
-            @jakarta.validation.constraints.Pattern(regexp="^domain:[a-z0-9-]{2,20}/[a-z0-9-]{4,10}$",message="{br.com.jstack.request.domain.canonicalid.pattern}")
+            @jakarta.validation.constraints.Pattern(
+              regexp="^domain:[a-z0-9-]{2,20}/[A-Z]{4,10}$",
+              message="{br.com.jstack.request.domain.canonicalid.pattern}"
+            )
         tenantId:
           type: string
           description: "Tenant identifier (2–10 lowercase alphanumeric characters, e.g., rd, ford, vivo)"
           example: "rd"
           x-field-extra-annotation: |
             @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.tenantId.notblank}")
-            @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{2,10}$",message="{br.com.jstack.request.domain.tenantId.pattern}")
+            @jakarta.validation.constraints.Pattern(
+              regexp="^[a-z0-9-]{2,10}$",
+              message="{br.com.jstack.request.domain.tenantId.pattern}"
+            )
         acronym:
           type: string
-          description: "Domain acronym (4-10 uppercase letters, e.g., FINANCE)"
+          description: "Domain acronym (4–10 uppercase letters)"
           example: "FINANCE"
           x-field-extra-annotation: |
             @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.acronym.notblank}")
-            @jakarta.validation.constraints.Pattern(regexp="^[A-Z]{4,10}$",message="{br.com.jstack.request.domain.acronym.pattern}")
+            @jakarta.validation.constraints.Pattern(
+              regexp="^[A-Z]{4,10}$",
+              message="{br.com.jstack.request.domain.acronym.pattern}"
+            )
         name:
           type: string
           description: "Full domain name (5–30 characters)"
@@ -1373,13 +453,17 @@ components:
           example: "ACTIVE"
           x-field-extra-annotation: |
             @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.status.notblank}")
-            @jakarta.validation.constraints.Pattern(regexp = "ACTIVE|DEPRECATED|INACTIVE", message="{br.com.jstack.request.domain.status.pattern}")
+            @jakarta.validation.constraints.Pattern(
+              regexp="^(ACTIVE|DEPRECATED|INACTIVE)$",
+              message="{br.com.jstack.request.domain.status.pattern}"
+            )
+
     BusinessDomainResponse:
       type: object
       properties:
         canonicalId:
           type: string
-          description: "Canonical identifier of the domain. Format: domain:<tenant>/<acronym>"
+          description: "Canonical identifier of the domain. Format: domain:<tenantId>/<acronym>"
           example: "domain:rd/FINANCE"
         tenantId:
           type: string
@@ -1387,7 +471,7 @@ components:
           example: "ford"
         acronym:
           type: string
-          description: "Domain acronym (4 uppercase letters)"
+          description: "Domain acronym (4–10 uppercase letters)"
           example: "FINANCE"
         name:
           type: string
@@ -1401,8 +485,9 @@ components:
           type: string
           description: "Domain status (ACTIVE, DEPRECATED, INACTIVE)"
           example: "ACTIVE"
-        Audit:
+        audit:
           $ref: '#/components/schemas/Audit'
+
     Audit:
       type: object
       properties:
@@ -1416,14 +501,10 @@ components:
         updatedAt:
           type: string
           format: date-time
+
     ErrorResponse:
       type: object
-      required:
-        - timestamp
-        - codeStatus
-        - messageStatus
-        - errors
-        - path
+      required: [ timestamp, codeStatus, messageStatus, errors, path ]
       properties:
         timestamp:
           type: string
@@ -1432,7 +513,7 @@ components:
         codeStatus:
           type: integer
           format: int32
-          example: 40X
+          example: 400
         messageStatus:
           type: string
           example: Invalid input data
@@ -1441,8 +522,8 @@ components:
           items:
             type: string
           example:
-            - "name: O campo deve conter no mínimo 1 caracteres."
-            - "unitIds: A lista não pode estar vazia."
+            - "name: must not be blank"
+            - "status: must be one of [ACTIVE, INACTIVE, DEPRECATED]"
         path:
           type: string
-          example: /v1/xxx
+          example: /v1/tenant-companies
