@@ -47,7 +47,7 @@ public class TenantCompanyInputPort implements
 	
 	@Override
 	public TenantCompany update(TenantCompany tenantCompany) {
-		TenantCompany tenant = tenantCompany.updateName(tenantCompany.name(), policyResolver.resolve(UPDATE, TenantCompany.class));
+		TenantCompany tenant = tenantCompany.rename(tenantCompany.name(), policyResolver.resolve(UPDATE, TenantCompany.class));
 		return outputPort.update(tenant);
 	}
 	

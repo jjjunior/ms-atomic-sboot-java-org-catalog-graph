@@ -30,26 +30,45 @@ public class CompanyTenantRestAdapter implements TenantCompanyApi {
 	
 	@Override
 	public ResponseEntity<TenantCompanyResponse> createTenant(TenantCompanyRequest tenantCompanyRequest) {
-		return TenantCompanyApi.super.createTenant(tenantCompanyRequest);
+		TenantCompany tenantCompany = mapper.requestToDomain(tenantCompanyRequest);
+		
+		TenantCompany         created  = createUseCase.create(tenantCompany);
+		TenantCompanyResponse response = mapper.domainToResponse(created);
+
+		return ResponseEntity.status(201).body(response);
 	}
 	
 	@Override
 	public ResponseEntity<Void> deleteTenant(String tenantId) {
-		return TenantCompanyApi.super.deleteTenant(tenantId);
+		deleteUseCase.deleteById(tenantId);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
 	public ResponseEntity<List<TenantCompanyResponse>> listTenants() {
-		return TenantCompanyApi.super.listTenants();
+		List<TenantCompany> businessDomains = retrieveAllUseCase.retrieveAll();
+		List<TenantCompanyResponse> responses = businessDomains.stream()
+			.map(mapper::domainToResponse)
+			.toList();
+
+		return ResponseEntity.ok(responses);
 	}
 	
 	@Override
 	public ResponseEntity<TenantCompanyResponse> retrieveTenant(String tenantId) {
-		return TenantCompanyApi.super.retrieveTenant(tenantId);
+		TenantCompany tenantCompany = retrieveByIdUseCase.retrieveById(tenantId);
+		TenantCompanyResponse response = mapper.domainToResponse(tenantCompany);
+		return ResponseEntity.ok(response);
 	}
 	
 	@Override
 	public ResponseEntity<TenantCompanyResponse> updateTenant(String tenantId, TenantCompanyRequest tenantCompanyRequest) {
-		return TenantCompanyApi.super.updateTenant(tenantId, tenantCompanyRequest);
+		TenantCompany tenantCompany = mapper.requestToDomain(tenantCompanyRequest);
+		tenantCompany.withTenantId(tenantId);
+		
+		TenantCompany         updated  = updateUseCase.update(tenantCompany);
+		TenantCompanyResponse response = mapper.domainToResponse(updated);
+		
+		return ResponseEntity.ok(response);
 	}
 }

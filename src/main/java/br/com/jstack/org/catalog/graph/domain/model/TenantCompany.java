@@ -1,7 +1,9 @@
 package br.com.jstack.org.catalog.graph.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import br.com.jstack.org.catalog.graph.domain.node.BusinessDomainNode;
 import br.com.jstack.org.catalog.graph.domain.policy.ValidationPolicy;
 import br.com.jstack.org.catalog.graph.domain.vo.TenantStatus;
 import lombok.Builder;
@@ -21,6 +23,7 @@ import static br.com.jstack.org.catalog.graph.domain.vo.TenantStatus.INACTIVE;
  */
 @Builder(toBuilder = true)
 public record TenantCompany(
+	@With
 	String        tenantId,
 	String        name,
 	TenantStatus  status,
@@ -29,12 +32,13 @@ public record TenantCompany(
 	String        updatedBy,
 	LocalDateTime createdAt,
 	@With
-	LocalDateTime updatedAt
+	LocalDateTime updatedAt,
+	Set<BusinessDomainNode> businessDomains
 	
 ) {
 	
-	public static TenantCompany create(TenantCompany draft, ValidationPolicy<TenantCompany> policy) {
-		var tenant = draft.toBuilder()
+	public static TenantCompany create(TenantCompany tenantCompany, ValidationPolicy<TenantCompany> policy) {
+		var tenant = tenantCompany.toBuilder()
 			.status(ACTIVE)
 			.build();
 		
@@ -43,31 +47,31 @@ public record TenantCompany(
 	}
 	
 	/** Rename command with audit. */
-	public TenantCompany updateName(String newName, ValidationPolicy<TenantCompany> policy) {
-		var next = this.toBuilder()
+	public TenantCompany rename(String newName, ValidationPolicy<TenantCompany> policy) {
+		var tenant = this.toBuilder()
 			.name(newName)
 			.build();
-		policy.validate(next, UPDATE);
-		return next;
+		policy.validate(tenant, UPDATE);
+		return tenant;
 	}
 	
 	/** Inactivate tenant. */
 	public TenantCompany inactivate(ValidationPolicy<TenantCompany> policy) {
-		var next = this.toBuilder()
+		var tenant = this.toBuilder()
 			.status(INACTIVE)
 			.build();
 		
-		policy.validate(next, UPDATE);
-		return next;
+		policy.validate(tenant, UPDATE);
+		return tenant;
 	}
 	
 	/** Activate tenant. */
 	public TenantCompany activate(ValidationPolicy<TenantCompany> policy) {
-		var next = this.toBuilder()
+		var tenant = this.toBuilder()
 			.status(ACTIVE)
 			.build();
 		
-		policy.validate(next, UPDATE);
-		return next;
+		policy.validate(tenant, UPDATE);
+		return tenant;
 	}
 }
