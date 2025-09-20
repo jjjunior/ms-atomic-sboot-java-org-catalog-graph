@@ -21,6 +21,7 @@ import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.UPDATE;
 @Builder(toBuilder = true)
 public record BusinessDomain(
 	String tenantId,
+	@With
 	String canonicalId,
 	String acronym,
 	String name,
