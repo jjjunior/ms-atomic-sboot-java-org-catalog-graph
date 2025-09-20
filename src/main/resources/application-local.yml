@@ -3,11 +3,13 @@ spring:
     activate:
       on-profile: local
 
-  datasource:
-    url: jdbc:neo4j:bolt://localhost:7688
-    username: neo4j
-    password: test1234
-    driver-class-name: org.neo4j.jdbc.bolt.BoltDriver
+  neo4j:
+    uri: bolt://localhost:7688
+    authentication:
+      username: neo4j
+      password: test1234
+    security:
+      encrypted: false
 
   liquibase:
     enabled: true
@@ -34,4 +36,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: info, health, metrics, prometheus
+        include: info, health, metrics

@@ -20,22 +20,24 @@ public class TenantCompanyPersistenceAdapter implements TenantCompanyOutputPort 
 	private final TenantCompanyMapper mapper;
 	
 	@Override
-	public TenantCompany save(TenantCompany node) {
-		return null;
+	public TenantCompany save(TenantCompany tenantCompany) {
+		TenantCompanyNode node = mapper.domainToNode(tenantCompany);
+		TenantCompanyNode saved = repository.save(node);
+		return mapper.nodeToDomain(saved);
 	}
 	
 	@Override
 	public TenantCompany findById(String tenantId) {
 		Optional<TenantCompanyNode> tenantCompanyNode = repository.findById(tenantId);
 		if(tenantCompanyNode.isPresent()) {
-			return mapper.toDomain(tenantCompanyNode.get());
+			return mapper.nodeToDomain(tenantCompanyNode.get());
 		}
 		return null;
 	}
 	
 	@Override
 	public List<TenantCompany> findAll() {
-		return List.of();
+		return repository.findAll().stream().map(mapper::nodeToDomain).toList();
 	}
 	
 	@Transactional
@@ -45,8 +47,10 @@ public class TenantCompanyPersistenceAdapter implements TenantCompanyOutputPort 
 	}
 	
 	@Override
-	public TenantCompany update(TenantCompany node) {
-		return null;
+	public TenantCompany update(TenantCompany tenantCompany) {
+		TenantCompanyNode node = mapper.domainToNode(tenantCompany);
+		TenantCompanyNode saved = repository.save(node);
+		return mapper.nodeToDomain(saved);
 	}
 	
 	@Override
