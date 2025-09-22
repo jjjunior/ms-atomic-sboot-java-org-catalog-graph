@@ -1,4 +1,4 @@
-package br.com.jstack.org.catalog.graph.domain.node;
+package br.com.jstack.org.catalog.graph.framework.adapter.output.node;
 
 import java.time.LocalDateTime;
 
@@ -20,43 +20,28 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "canonicalId")
-public class BusinessDomainNode {
-	
+public class DomainNode {
 	@Id
-	private String canonicalId;
-	
-	private String tenantId;
-	
-	private String acronym;
-	
-	private String name;
-	
-	private String description;
-	
-	private DomainStatus status;
-	
-	private String approvedBy;
-	
-	private LocalDateTime approvedAt;
-	
-	private String rejectedBy;
-	
-	private LocalDateTime rejectedAt;
-	
-	private String rejectionReason;
-	
+	private String        canonicalId;
+	private String        tenantId;
+	private String        acronym;
+	private String        name;
+	private String        description;
+	private DomainStatus  status;
 	@CreatedDate
 	private LocalDateTime createdAt;
-	
 	@CreatedBy
-	private String createdBy;
-	
+	private String        createdBy;
+	@LastModifiedBy
+	private String        updatedBy;
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
-	
-	@LastModifiedBy
-	private String updatedBy;
-	
+	private String        approvedBy;
+	private LocalDateTime approvedAt;
+	private String        rejectedBy;
+	private LocalDateTime rejectedAt;
+	private String        rejectionReason;
 	@Relationship(type = "TENANT_OWNS_DOMAIN", direction = Relationship.Direction.INCOMING)
-	private TenantCompanyNode tenant;
+	private TenantNode    tenantCompanies;
+	
 }

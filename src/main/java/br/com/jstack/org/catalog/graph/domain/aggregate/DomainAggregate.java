@@ -1,13 +1,15 @@
-package br.com.jstack.org.catalog.graph.domain.model;
+package br.com.jstack.org.catalog.graph.domain.aggregate;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
-import br.com.jstack.org.catalog.graph.domain.node.TenantCompanyNode;
 import br.com.jstack.org.catalog.graph.domain.policy.ValidationPolicy;
 import br.com.jstack.org.catalog.graph.domain.vo.DomainStatus;
+import br.com.jstack.org.catalog.graph.framework.adapter.output.node.TenantNode;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.CREATE;
 import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.UPDATE;
@@ -15,35 +17,35 @@ import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.UPDATE;
 /**
  * Aggregate Root: BusinessDomain<p>
  * <p>
- * Immutable domain record that represents a canonical Business Domain in a multi-tenant environment.<p>
+ * Class domain that represents a canonical Business Domain in a multi-tenant environment.<p>
  * <p>
  * Lifecycle is explicit and controlled by commands (approve, reject, etc.).<br>
- * Every command returns a NEW instance (immutability principle).
+ * Every command returns a NEW instance.
  */
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = "canonicalId")
 @Builder(toBuilder = true)
-public record BusinessDomain(
-	String tenantId,
-	@With
-	String canonicalId,
-	String acronym,
-	String name,
-	String description,
-	DomainStatus status,
-	String createdBy,
-	@With
-	String updatedBy,
-	String approvedBy,
-	String rejectedBy,
-	LocalDateTime createdAt,
-	@With
-	LocalDateTime updatedAt,
-	LocalDateTime approvedAt,
-	LocalDateTime rejectedAt,
-	@With
-	String rejectionReason,
+public class DomainAggregate {
+	private String        canonicalId;
+	private String        tenantId;
+	private String        acronym;
+	private String        name;
+	private String        description;
+	private DomainStatus  status;
+	private String        createdBy;
+	private LocalDateTime createdAt;
+	private String        updatedBy;
+	private LocalDateTime updatedAt;
+	private String        approvedBy;
+	private LocalDateTime approvedAt;
+	private String        rejectedBy;
+	private LocalDateTime rejectedAt;
+	private String        rejectionReason;
+	private TenantNode    tenantCompanies;
 	
-	Set<TenantCompanyNode> tenantCompanies
-) {
 	/**
 	 * Factory for CREATE operation.<p>
 	 * <p>
@@ -60,21 +62,21 @@ public record BusinessDomain(
 	 * @param policy Policy used to validate invariants
 	 * @return New BusinessDomain instance in PENDING_APPROVAL
 	 */
-	public static BusinessDomain create(BusinessDomain draft, ValidationPolicy<BusinessDomain> policy) {
-		String canonical = draft.canonicalId() != null
-			? draft.canonicalId()
-			: "domain:%s/%s".formatted(draft.tenantId(), draft.acronym().toLowerCase());
+	public static DomainAggregate create(DomainAggregate draft, ValidationPolicy<DomainAggregate> policy) {
+		String canonical = draft.getCanonicalId() != null
+			? draft.getCanonicalId()
+			: "domain:%s/%s".formatted(draft.getTenantId(), draft.getAcronym().toLowerCase());
 		
 		var domain = draft.toBuilder()
 			.canonicalId(canonical)
 			.status(DomainStatus.PENDING_APPROVAL)
-			.createdAt(draft.createdAt() != null ? draft.createdAt() : LocalDateTime.now())
+			.createdAt(draft.getCreatedAt() != null ? draft.getCreatedAt() : LocalDateTime.now())
 			.approvedAt(null).approvedBy(null)
 			.rejectedAt(null).rejectedBy(null)
 			.rejectionReason(null)
 			.build();
 		
-		policy.validate(domain,CREATE);
+		policy.validate(domain, CREATE);
 		
 		return domain;
 	}
@@ -91,12 +93,12 @@ public record BusinessDomain(
 	 *
 	 * <b>Note:</b> Use explicit commands for lifecycle changes.
 	 */
-	public BusinessDomain update(BusinessDomain changes, ValidationPolicy<BusinessDomain> policy) {
+	public DomainAggregate update(DomainAggregate changes, ValidationPolicy<DomainAggregate> policy) {
 		var next = this.toBuilder()
-			.name(changes.name() != null ? changes.name() : this.name)
-			.description(changes.description() != null ? changes.description() : this.description)
-			.updatedBy(changes.updatedBy())
-			.updatedAt(changes.updatedAt() != null ? changes.updatedAt() : LocalDateTime.now())
+			.name(changes.getName() != null ? changes.getName() : this.name)
+			.description(changes.getDescription() != null ? changes.getDescription() : this.description)
+			.updatedBy(changes.getUpdatedBy())
+			.updatedAt(changes.getUpdatedAt() != null ? changes.getUpdatedAt() : LocalDateTime.now())
 			.build();
 		
 		policy.validate(next, UPDATE);
@@ -115,7 +117,7 @@ public record BusinessDomain(
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public BusinessDomain approve(String actor, LocalDateTime when, ValidationPolicy<BusinessDomain> policy) {
+	public DomainAggregate approve(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.ACTIVE)
@@ -140,8 +142,7 @@ public record BusinessDomain(
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public BusinessDomain reject(String actor, LocalDateTime when, String reason,
-	                             ValidationPolicy<BusinessDomain> policy) {
+	public DomainAggregate reject(String actor, LocalDateTime when, String reason, ValidationPolicy<DomainAggregate> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.REJECTED)
@@ -166,8 +167,7 @@ public record BusinessDomain(
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public BusinessDomain resubmitForApproval(String actor, LocalDateTime when,
-	                                          ValidationPolicy<BusinessDomain> policy) {
+	public DomainAggregate resubmitForApproval(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.PENDING_APPROVAL)
@@ -189,7 +189,7 @@ public record BusinessDomain(
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public BusinessDomain deprecate(String actor, LocalDateTime when, ValidationPolicy<BusinessDomain> policy) {
+	public DomainAggregate deprecate(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.DEPRECATED)
@@ -209,7 +209,7 @@ public record BusinessDomain(
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public BusinessDomain inactivate(String actor, LocalDateTime when, ValidationPolicy<BusinessDomain> policy) {
+	public DomainAggregate inactivate(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.INACTIVE)
@@ -230,7 +230,7 @@ public record BusinessDomain(
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public BusinessDomain activate(String actor, LocalDateTime when, ValidationPolicy<BusinessDomain> policy) {
+	public DomainAggregate activate(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.ACTIVE)
