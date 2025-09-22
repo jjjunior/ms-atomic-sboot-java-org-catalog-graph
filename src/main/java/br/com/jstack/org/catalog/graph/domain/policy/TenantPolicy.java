@@ -1,7 +1,7 @@
 package br.com.jstack.org.catalog.graph.domain.policy;
 
-import br.com.jstack.org.catalog.graph.application.port.output.TenantCompanyOutputPort;
-import br.com.jstack.org.catalog.graph.domain.model.TenantCompany;
+import br.com.jstack.org.catalog.graph.application.port.output.TenantOutputPort;
+import br.com.jstack.org.catalog.graph.domain.aggregate.TenantAggregate;
 import br.com.jstack.org.catalog.graph.domain.specification.SpecificationFactory;
 import br.com.jstack.org.catalog.graph.domain.vo.OperationType;
 import lombok.RequiredArgsConstructor;
@@ -9,17 +9,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TenantCompanyPolicy implements ValidationPolicy<TenantCompany> {
+public class TenantPolicy implements ValidationPolicy<TenantAggregate> {
 	
-	private final SpecificationFactory    factory;
-	private final TenantCompanyOutputPort outputPort;
+	private final SpecificationFactory factory;
+	private final TenantOutputPort     outputPort;
 	
 	@Override
-	public void validate(TenantCompany tenant, OperationType operation) {
+	public void validate(TenantAggregate tenantAggregate, OperationType operation) {
 		
 		if (operation == OperationType.CREATE) {
-			var uniqueNameSpec = factory.uniqueName(outputPort::existsByTenantId, TenantCompany::tenantId);
-			if (!uniqueNameSpec.isSatisfiedBy(tenant)) {
+			var uniqueNameSpec = factory.uniqueName(outputPort::existsByTenantId, TenantAggregate::getTenantId);
+			if (!uniqueNameSpec.isSatisfiedBy(tenantAggregate)) {
 				throw new IllegalArgumentException("Tenant Company must be unique (tenantId).");
 			}
 		}
@@ -38,7 +38,7 @@ public class TenantCompanyPolicy implements ValidationPolicy<TenantCompany> {
 	}
 	
 	@Override
-	public Class<TenantCompany> getTargetType() {
-		return TenantCompany.class;
+	public Class<TenantAggregate> getTargetType() {
+		return TenantAggregate.class;
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.jstack.org.catalog.graph.domain.node;
+package br.com.jstack.org.catalog.graph.framework.adapter.output.node;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -24,28 +24,20 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(of = "tenantId")
-public class TenantCompanyNode {
-	
+public class TenantNode {
 	@Id
-	private String tenantId;
-	
-	private String name;
-	
-	private TenantStatus status;
-	
-	@CreatedDate
-	private LocalDateTime createdAt;
-	
+	private String          tenantId;
+	private String          name;
+	private TenantStatus    status;
 	@CreatedBy
-	private String createdBy;
-	
+	private String          createdBy;
+	@CreatedDate
+	private LocalDateTime   createdAt;
 	@LastModifiedDate
-	private LocalDateTime updatedAt;
-	
+	private LocalDateTime   updatedAt;
 	@LastModifiedBy
-	private String updatedBy;
-	
+	private String          updatedBy;
 	@Builder.Default
 	@Relationship(type = "TENANT_OWNS_DOMAIN", direction = Relationship.Direction.OUTGOING)
-	private Set<BusinessDomainNode> businessDomains = new HashSet<>();
+	private Set<DomainNode> businessDomains = new HashSet<>();
 }
