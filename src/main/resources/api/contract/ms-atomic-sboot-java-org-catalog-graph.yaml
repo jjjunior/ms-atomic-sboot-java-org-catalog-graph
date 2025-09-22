@@ -1,545 +1,1094 @@
 openapi: 3.0.3
 info:
-  title: System Acronym Registry
+  title: Org Catalog Graph (JStack)
   version: v1
 servers:
-  - url: https://system-acronym.des.jstack.com.br
+  - url: https://org-catalog.des.jstack.com.br
     description: DES
-  - url: https://system-acronym.uat.jstack.com.br
+  - url: https://org-catalog.uat.jstack.com.br
     description: UAT
-  - url: https://system-acronym.jstack.com.br
+  - url: https://org-catalog.jstack.com.br
     description: PRD
 security:
   - bearerAuth: [ ]
+
 tags:
-  - name: TenantCompany
-  - name: BusinessDomain
+  - name: Tenants
+    description: Operações de gestão de tenants.
+  - name: Domains
+    description: CRUD de domínios e navegação relacionada.
+  - name: Subdomains
+    description: CRUD de subdomínios e navegação relacionada.
+  - name: Capabilities
+    description: CRUD de capabilities e navegação de donos.
+  - name: Relationships
+    description: Endpoints de vínculo e navegação entre entidades.
+
+x-tagGroups:
+  - name: Catálogo
+    tags: [ Tenants, Domains, Subdomains, Capabilities ]
+  - name: Relações
+    tags: [ Relationships ]
+
 paths:
-  /v1/tenant-companies:
+  # ────────────────────────────── TENANTS ──────────────────────────────
+  /v1/tenants:
     get:
-      tags: [ TenantCompany ]
-      summary: List Tenants
+      tags: [ Tenants ]
+      summary: List tenants
       operationId: listTenants
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/SizeParameter'
       responses:
-        '200':
-          description: List of tenants (may be empty)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TenantCompanyResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '200': { $ref: '#/components/responses/OkPagedResponse' }
     post:
-      tags: [ TenantCompany ]
-      summary: Create a tenant
+      tags: [ Tenants ]
+      summary: Create tenant
       operationId: createTenant
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TenantCompanyRequest'
+        content: { application/json: { schema: { $ref: '#/components/schemas/TenantRequest' } } }
       responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TenantCompanyResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '201': { $ref: '#/components/responses/CreatedItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
 
-  /v1/tenant-companies/{tenantId}:
+  /v1/tenants/{tenantId}:
     get:
-      tags: [ TenantCompany ]
-      summary: Get Tenant by ID
-      operationId: retrieveTenant
-      parameters:
-        - name: tenantId
-          in: path
-          required: true
-          schema:
-            type: string
+      tags: [ Tenants ]
+      summary: Get tenant
+      operationId: getTenant
+      parameters: [ { $ref: '#/components/parameters/TenantIdPathParameter' } ]
       responses:
-        '200':
-          description: Tenant details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TenantCompanyResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
     put:
-      tags: [ TenantCompany ]
+      tags: [ Tenants ]
       summary: Update tenant
       operationId: updateTenant
-      parameters:
-        - name: tenantId
-          in: path
-          required: true
-          schema:
-            type: string
+      parameters: [ { $ref: '#/components/parameters/TenantIdPathParameter' } ]
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TenantCompanyRequest'
+        content: { application/json: { schema: { $ref: '#/components/schemas/TenantRequest' } } }
       responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TenantCompanyResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
     delete:
-      tags: [ TenantCompany ]
-      summary: Delete Tenant
+      tags: [ Tenants ]
+      summary: Delete tenant
       operationId: deleteTenant
-      parameters:
-        - name: tenantId
-          in: path
-          required: true
-          schema:
-            type: string
+      parameters: [ { $ref: '#/components/parameters/TenantIdPathParameter' } ]
       responses:
-        '204':
-          description: Deleted
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
 
-  /v1/business-domains:
+  # ────────────────────────────── DOMAINS ──────────────────────────────
+  /v1/domains:
     get:
-      tags: [ BusinessDomain ]
-      summary: List business domains
-      operationId: listBusinessDomains
+      tags: [ Domains ]
+      summary: List domains
+      operationId: listDomains
+      parameters:
+        - $ref: '#/components/parameters/XNamespaceOptParameter'
+        - in: query
+          name: q
+          description: Free-text search on acronym/name/labels
+          schema: { type: string }
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/SizeParameter'
       responses:
-        '200':
-          description: List (may be empty)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BusinessDomainResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '200': { $ref: '#/components/responses/OkPagedResponse' }
     post:
-      tags: [ BusinessDomain ]
-      summary: Create business domain
-      operationId: createBusinessDomain
+      tags: [ Domains ]
+      summary: Create domain
+      operationId: createDomain
+      parameters: [ { $ref: '#/components/parameters/XNamespaceOptParameter' } ]
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BusinessDomainRequest'
+        content: { application/json: { schema: { $ref: '#/components/schemas/DomainRequest' } } }
       responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BusinessDomainResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '201': { $ref: '#/components/responses/CreatedItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
 
-  /v1/business-domains/{canonicalId}:
+  /v1/domains/{domainAcronym}:
     get:
-      tags: [ BusinessDomain ]
-      summary: Get business domain by id
-      operationId: retrieveBusinessDomain
+      tags: [ Domains ]
+      summary: Get domain
+      operationId: getDomain
       parameters:
-        - name: canonicalId
-          in: path
-          required: true
-          schema:
-            type: string
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
       responses:
-        '200':
-          description: Business domain
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BusinessDomainResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
     put:
-      tags: [ BusinessDomain ]
-      summary: Update business domain
-      operationId: updateBusinessDomain
+      tags: [ Domains ]
+      summary: Update domain
+      operationId: updateDomain
       parameters:
-        - name: canonicalId
-          in: path
-          required: true
-          schema:
-            type: string
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/DomainRequest' } } }
+      responses:
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+    delete:
+      tags: [ Domains ]
+      summary: Delete domain
+      operationId: deleteDomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+      responses:
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+
+  # DOMÍNIO → SUBDOMÍNIOS (direto)
+  /v1/domains/{domainAcronym}/subdomains:
+    get:
+      tags: [ Domains, Relationships ]
+      summary: List subdomains of domain (HAS_SUBDOMAIN)
+      operationId: listSubdomainsOfDomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/SizeParameter'
+      responses:
+        '200': { $ref: '#/components/responses/OkPagedResponse' }
+    post:
+      tags: [ Domains, Relationships ]
+      summary: Link subdomains to domain (batch)
+      operationId: linkSubdomainsToDomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BusinessDomainRequest'
+              $ref: '#/components/schemas/LinkSubdomainsRequest'
       responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BusinessDomainResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '207': { $ref: '#/components/responses/MultiStatusResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+
+  /v1/domains/{domainAcronym}/subdomains/{subAcronym}:
     delete:
-      tags: [ BusinessDomain ]
-      summary: Delete business domain
-      operationId: deleteBusinessDomain
+      tags: [ Domains, Relationships ]
+      summary: Unlink subdomain from domain
+      operationId: unlinkSubdomainFromDomain
       parameters:
-        - name: canonicalId
-          in: path
-          required: true
-          schema:
-            type: string
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/SubAcronymParameter' }
       responses:
-        '204':
-          description: Deleted
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+
+  # SUBDOMÍNIO → DOMÍNIO (inverso)
+  /v1/subdomains/{domainAcronym}/{subAcronym}/domain:
+    get:
+      tags: [ Subdomains, Relationships ]
+      summary: Get parent domain (BELONGS_TO_DOMAIN)
+      operationId: getParentDomainOfSubdomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/SubAcronymParameter' }
+      responses:
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+    put:
+      tags: [ Subdomains, Relationships ]
+      summary: Set parent domain (BELONGS_TO_DOMAIN)
+      operationId: setParentDomainOfSubdomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/SubAcronymParameter' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetParentDomainRequest'
+      responses:
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+    delete:
+      tags: [ Subdomains, Relationships ]
+      summary: Unset parent domain (BELONGS_TO_DOMAIN)
+      operationId: unsetParentDomainOfSubdomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/SubAcronymParameter' }
+      responses:
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+
+  # ──────────────────────────── SUBDOMAINS ────────────────────────────
+  /v1/subdomains:
+    get:
+      tags: [ Subdomains ]
+      summary: List subdomains
+      operationId: listSubdomains
+      parameters:
+        - $ref: '#/components/parameters/XNamespaceOptParameter'
+        - in: query
+          name: domainAcronym
+          schema: { $ref: '#/components/schemas/DomainAcronymParameter' }
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/SizeParameter'
+      responses:
+        '200': { $ref: '#/components/responses/OkPagedResponse' }
+    post:
+      tags: [ Subdomains ]
+      summary: Create subdomain
+      operationId: createSubdomain
+      parameters: [ { $ref: '#/components/parameters/XNamespaceOptParameter' } ]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/SubdomainRequest' } } }
+      responses:
+        '201': { $ref: '#/components/responses/CreatedItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+
+  /v1/subdomains/{domainAcronym}/{subAcronym}:
+    get:
+      tags: [ Subdomains ]
+      summary: Get subdomain
+      operationId: getSubdomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/SubAcronymParameter' }
+      responses:
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+    put:
+      tags: [ Subdomains ]
+      summary: Update subdomain
+      operationId: updateSubdomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/SubAcronymParameter' }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/SubdomainRequest' } } }
+      responses:
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+    delete:
+      tags: [ Subdomains ]
+      summary: Delete subdomain
+      operationId: deleteSubdomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/SubAcronymParameter' }
+      responses:
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+
+  # ──────────────────────────── CAPABILITIES ───────────────────────────
+  /v1/capabilities:
+    get:
+      tags: [ Capabilities ]
+      summary: List capabilities
+      operationId: listCapabilities
+      parameters:
+        - $ref: '#/components/parameters/XNamespaceOptParameter'
+        - in: query
+          name: ownedByDomain
+          schema: { $ref: '#/components/schemas/DomainAcronymParameter' }
+        - in: query
+          name: ownedBySubdomain
+          schema: { $ref: '#/components/schemas/SubAcronymParameter' }
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/SizeParameter'
+      responses:
+        '200': { $ref: '#/components/responses/OkPagedResponse' }
+    post:
+      tags: [ Capabilities ]
+      summary: Create capability
+      operationId: createCapability
+      parameters: [ { $ref: '#/components/parameters/XNamespaceOptParameter' } ]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/CapabilityRequest' } } }
+      responses:
+        '201': { $ref: '#/components/responses/CreatedItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+
+  /v1/capabilities/{capSlug}:
+    get:
+      tags: [ Capabilities ]
+      summary: Get capability
+      operationId: getCapability
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/CapSlugParameter' }
+      responses:
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+    put:
+      tags: [ Capabilities ]
+      summary: Update capability
+      operationId: updateCapability
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/CapSlugParameter' }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/CapabilityRequest' } } }
+      responses:
+        '200': { $ref: '#/components/responses/OkItemResponse' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+    delete:
+      tags: [ Capabilities ]
+      summary: Delete capability
+      operationId: deleteCapability
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/CapSlugParameter' }
+      responses:
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+
+  # DONO CANÔNICO (domain/subdomain) ↔ capability
+  /v1/domains/{domainAcronym}/capabilities:
+    get:
+      tags: [ Domains, Relationships ]
+      summary: List domain capabilities (HAS_CAPABILITY)
+      operationId: listDomainCapabilities
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/SizeParameter'
+      responses:
+        '200': { $ref: '#/components/responses/OkPagedResponse' }
+    post:
+      tags: [ Domains, Relationships ]
+      summary: Link capabilities to domain (batch)
+      operationId: linkCapabilitiesToDomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkCapabilitiesRequest'
+      responses:
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '207': { $ref: '#/components/responses/MultiStatusResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+        '409': { $ref: '#/components/responses/StatusError' }
+        '422': { $ref: '#/components/responses/StatusError' }
+
+  /v1/domains/{domainAcronym}/capabilities/{capSlug}:
+    delete:
+      tags: [ Domains, Relationships ]
+      summary: Unlink capability from domain
+      operationId: unlinkCapabilityFromDomain
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/DomainAcronymParameter' }
+        - { $ref: '#/components/parameters/CapSlugParameter' }
+      responses:
+        '204': { $ref: '#/components/responses/NoContentResponse' }
+        '404': { $ref: '#/components/responses/StatusError' }
+
+  /v1/capabilities/{capSlug}/owners:
+    get:
+      tags: [ Capabilities, Relationships ]
+      summary: List capability owners (domains/subdomains)
+      operationId: listCapabilityOwners
+      parameters:
+        - { $ref: '#/components/parameters/XNamespaceOptParameter' }
+        - { $ref: '#/components/parameters/CapSlugParameter' }
+      responses:
+        '200': { $ref: '#/components/responses/OkPagedResponse' }
 
 components:
+
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
 
-  schemas:
-    TenantCompanyRequest:
-      type: object
-      required: [ tenantId, name ]
-      properties:
-        tenantId:
-          type: string
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.Size(min=2, max=10, message="{br.com.jstack.request.tenant.size}")
-        name:
-          type: string
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.Size(min=2, max=30, message="{br.com.jstack.request.tenant.size}")
-        status:
-          type: string
-          enum: [ ACTIVE, INACTIVE, DEPRECATED ]
-#          x-field-extra-annotation: |
-#            @jakarta.validation.constraints.NotNull(message="{br.com.jstack.request.tenant.status.notnull}")
+  parameters:
+    XNamespaceOptParameter:
+      in: header
+      name: X-Namespace
+      required: false
+      description: 'Tenant namespace. Se ausente, o servidor usa o tenant padrão (ex.: "default").'
+      schema: { $ref: '#/components/schemas/NamespaceParameter' }
+      examples: { vivo: { value: vivo }, default: { value: default } }
 
-    TenantCompanyResponse:
+    TenantIdPathParameter:
+      in: path
+      name: tenantId
+      required: true
+      schema: { $ref: '#/components/schemas/NamespaceParameter' }
+
+    DomainAcronymParameter:
+      in: path
+      name: domainAcronym
+      required: true
+      schema: { $ref: '#/components/schemas/DomainAcronymParameter' }
+
+    SubAcronymParameter:
+      in: path
+      name: subAcronym
+      required: true
+      schema: { $ref: '#/components/schemas/SubAcronymParameter' }
+
+    CapSlugParameter:
+      in: path
+      name: capSlug
+      required: true
+      schema: { $ref: '#/components/schemas/CapSlugParameter' }
+
+    PageParameter:
+      in: query
+      name: page
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      x-field-extra-annotation: |
+        @jakarta.validation.constraints.Min(value = 0,message = "{br.com.jstack.parameter.page.min}")
+
+    SizeParameter:
+      in: query
+      name: size
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 20
+      x-field-extra-annotation: |
+        @jakarta.validation.constraints.Min(value = 1, message = "{br.com.jstack.parameter.size.min}")
+        @jakarta.validation.constraints.Max(value = 200, message = "{br.com.jstack.parameter.size.max}")
+
+  responses:
+    OkItemResponse:
+      description: OK
+      headers:
+        X-Request-Id: { schema: { type: string } }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ItemResponse' }
+
+    OkPagedResponse:
+      description: OK (paged list)
+      headers:
+        X-Request-Id: { schema: { type: string } }
+        X-Total-Count: { schema: { type: integer } }
+        Link:
+          description: RFC5988 pagination links
+          schema: { type: string, example: '<.../v1/domains?page=1&size=20>; rel="next"' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/PagedListResponse' }
+
+    CreatedItemResponse:
+      description: Created
+      headers:
+        Location: { schema: { type: string }, description: 'URI do recurso criado' }
+        X-Request-Id: { schema: { type: string } }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ItemResponse' }
+
+    NoContentResponse:
+      description: No Content
+      headers:
+        X-Request-Id: { schema: { type: string } }
+
+    MultiStatusResponse:
+      description: Multi-Status (parcialmente bem-sucedido)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/MultiStatusResponse' }
+
+    StatusError:
+      description: Error (RFC7807)
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/StatusErrorResponse' }
+
+  schemas:
+
+    # ---------- Tipos usados por parâmetros (escalares) ----------
+    NamespaceParameter:
+      type: string
+      description: Namespace (tenant) em minúsculas com hífens.
+      pattern: '^[a-z0-9-]{2,10}$'
+      minLength: 2
+      maxLength: 10
+      example: vivo
+      x-field-extra-annotation: |
+        @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.parameter.namespace.notblank}")
+        @jakarta.validation.constraints.Size(min=2, max=10, message="{br.com.jstack.parameter.namespace.size}")
+        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{2,10}$", message="{br.com.jstack.parameter.namespace.pattern}")
+
+    DomainAcronymParameter:
+      type: string
+      description: Acrônimo do domínio.
+      pattern: '^[a-z0-9-]{3,15}$'
+      minLength: 3
+      maxLength: 15
+      example: fina
+      x-field-extra-annotation: |
+        @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.parameter.domainAcronym.notblank}")
+        @jakarta.validation.constraints.Size(min=3, max=15, message="{br.com.jstack.parameter.domainAcronym.size}")
+        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,15}$", message="{br.com.jstack.parameter.domainAcronym.pattern}")
+
+    SubAcronymParameter:
+      type: string
+      description: Acrônimo do subdomínio.
+      pattern: '^[a-z0-9-]{3,20}$'
+      minLength: 3
+      maxLength: 20
+      example: recei
+      x-field-extra-annotation: |
+        @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.parameter.subAcronym.notblank}")
+        @jakarta.validation.constraints.Size(min=3, max=20, message="{br.com.jstack.parameter.subAcronym.size}")
+        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,20}$", message="{br.com.jstack.parameter.subAcronym.pattern}")
+
+    CapSlugParameter:
+      type: string
+      description: Slug da capability.
+      pattern: '^[a-z0-9-]{3,40}$'
+      minLength: 3
+      maxLength: 40
+      example: customer-messaging
+      x-field-extra-annotation: |
+        @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.parameter.capSlug.notblank}")
+        @jakarta.validation.constraints.Size(min=3, max=40, message="{br.com.jstack.parameter.capSlug.size}")
+        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,40}$", message="{br.com.jstack.parameter.capSlug.pattern}")
+
+    # ---------- Envelope base (compartilhado) ----------
+    EnvelopeBase:
+      type: object
+      required: [ apiVersion, kind, metadata, spec ]
+      properties:
+        apiVersion:
+          type: string
+          example: org.jstack/v1
+          minLength: 5
+          maxLength: 50
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.envelope.apiVersion.notblank}")
+            @jakarta.validation.constraints.Size(min=5, max=50, message="{br.com.jstack.envelope.apiVersion.size}")
+        kind:
+          type: string
+          example: Domain
+          minLength: 3
+          maxLength: 40
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.envelope.kind.notblank}")
+            @jakarta.validation.constraints.Size(min=3, max=40, message="{br.com.jstack.envelope.kind.size}")
+        metadata:
+          type: object
+          required: [ name ]
+          properties:
+            name:
+              type: string
+              description: Nome canônico (normalmente igual ao identificador do path).
+              pattern: '^[a-z0-9-]{3,30}$'
+              minLength: 3
+              maxLength: 30
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.metadata.name.notblank}")
+                @jakarta.validation.constraints.Size(min=3, max=30, message="{br.com.jstack.metadata.name.size}")
+                @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,30}$", message="{br.com.jstack.metadata.name.pattern}")
+            description:
+              type: string
+              minLength: 3
+              maxLength: 255
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Size(min=3, max=255, message="{br.com.jstack.metadata.description.size}")
+            labels:
+              type: object
+              additionalProperties:
+                type: string
+                minLength: 1
+                maxLength: 60
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Size(min=1, max=60, message="{br.com.jstack.metadata.labels.value.size}")
+            annotations:
+              type: object
+              additionalProperties:
+                type: string
+                minLength: 1
+                maxLength: 200
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Size(min=1, max=200, message="{br.com.jstack.metadata.annotations.value.size}")
+        spec:
+          type: object
+        status:
+          type: object
+          properties:
+            lifecycle:
+              type: string
+              enum: [ ACTIVE, INACTIVE, DEPRECATED ]
+              default: ACTIVE
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Pattern(regexp="ACTIVE|INACTIVE|DEPRECATED", message="{br.com.jstack.status.lifecycle.enum}")
+            audit:
+              type: object
+              properties:
+                createdBy:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(min=1, max=80, message="{br.com.jstack.audit.createdBy.size}")
+                createdAt:
+                  type: string
+                  format: date-time
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.PastOrPresent(message="{br.com.jstack.audit.createdAt.pastOrPresent}")
+                updatedBy:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(min=1, max=80, message="{br.com.jstack.audit.updatedBy.size}")
+                updatedAt:
+                  type: string
+                  format: date-time
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.PastOrPresent(message="{br.com.jstack.audit.updatedAt.pastOrPresent}")
+
+    # ---------- Requests ----------
+    TenantRequest:
       allOf:
-        - $ref: '#/components/schemas/TenantCompanyRequest'
+        - $ref: '#/components/schemas/EnvelopeBase'
         - type: object
           properties:
-            audit:
-              $ref: '#/components/schemas/Audit'
+            kind:
+              type: string
+              enum: [ Tenant ]
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Pattern(regexp="Tenant", message="{br.com.jstack.request.tenant.kind.enum}")
+            spec:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                  minLength: 2
+                  maxLength: 40
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.tenant.displayName.notblank}")
+                    @jakarta.validation.constraints.Size(min=2, max=40, message="{br.com.jstack.request.tenant.displayName.size}")
+                owner:
+                  type: string
+                  minLength: 2
+                  maxLength: 80
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(min=2, max=80, message="{br.com.jstack.request.tenant.owner.size}")
 
-    BusinessDomainRequest:
-      type: object
-      required: [ tenantId, acronym, name, status, canonicalId ]
-      properties:
-        canonicalId:
-          type: string
-          description: "Canonical identifier of the domain. Format: domain:<tenantId>/<acronym> (e.g., domain:rd/FINANCE)"
-          example: "domain:rd/fina"
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.canonicalid.notblank}")
-            @jakarta.validation.constraints.Pattern(
-              regexp="^domain:[a-z0-9-]{2,10}/[a-z0-9-]{5,30}$",
-              message="{br.com.jstack.request.domain.canonicalid.pattern}"
-            )
-        tenantId:
-          type: string
-          description: "Tenant identifier (2–10 lowercase alphanumeric characters, e.g., rd, ford, vivo)"
-          example: "rd"
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.tenantId.notblank}")
-            @jakarta.validation.constraints.Pattern(
-              regexp="^[a-z0-9-]{2,10}$",
-              message="{br.com.jstack.request.domain.tenantId.pattern}"
-            )
-        acronym:
-          type: string
-          description: "Domain acronym (4–lowercase letters)"
-          example: "finc"
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.acronym.notblank}")
-            @jakarta.validation.constraints.Pattern(
-              regexp="^[a-z]{4}$",
-              message="{br.com.jstack.request.domain.acronym.pattern}"
-            )
-        name:
-          type: string
-          description: "Full domain name (5–30 characters)"
-          example: "Financial Services"
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.Size(min=5, max=30, message="{br.com.jstack.request.domain.name.size}")
-        description:
-          type: string
-          description: "Detailed description of the domain (5–255 characters)"
-          example: "Domain responsible for all financial and accounting operations."
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.Size(min=5, max=255, message="{br.com.jstack.request.domain.description.size}")
-        status:
-          type: string
-          description: "Domain status (allowed values: ACTIVE, DEPRECATED, INACTIVE)"
-          example: "ACTIVE"
-          x-field-extra-annotation: |
-            @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.domain.status.notblank}")
-            @jakarta.validation.constraints.Pattern(
-              regexp="^(ACTIVE|DEPRECATED|INACTIVE)$",
-              message="{br.com.jstack.request.domain.status.pattern}"
-            )
-        rejectionReason:
-          type: string
+    DomainRequest:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum: [ BusinessDomain ]
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Pattern(regexp="BusinessDomain", message="{br.com.jstack.request.domain.kind.enum}")
+            spec:
+              type: object
+              required: [ acronym ]
+              properties:
+                acronym:
+                  $ref: '#/components/schemas/DomainAcronymParameter'
+                description:
+                  type: string
+                  minLength: 3
+                  maxLength: 255
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(min=3, max=255, message="{br.com.jstack.request.domain.description.size}")
+                capabilities:
+                  type: array
+                  uniqueItems: true
+                  minItems: 0
+                  maxItems: 200
+                  items: { $ref: '#/components/schemas/CapSlugParameter' }
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(max=200, message="{br.com.jstack.request.domain.capabilities.size}")
 
-    BusinessDomainResponse:
-      type: object
-      properties:
-        canonicalId:
-          type: string
-          description: "Canonical identifier of the domain. Format: domain:<tenantId>/<acronym>"
-          example: "domain:rd/FINANCE"
-        tenantId:
-          type: string
-          description: "Tenant identifier (e.g., rd, ford, vivo, bva)"
-          example: "ford"
-        acronym:
-          type: string
-          description: "Domain acronym (4–10 uppercase letters)"
-          example: "FINANCE"
-        name:
-          type: string
-          description: "Full domain name"
-          example: "Financial Services"
-        description:
-          type: string
-          description: "Detailed description of the domain"
-          example: "Domain responsible for all financial and accounting operations."
-        status:
-          type: string
-          description: "Domain status (ACTIVE, DEPRECATED, INACTIVE)"
-          example: "ACTIVE"
-        rejectedBy:
-          type: string
-        rejectedAt:
-          type: string
-          format: date-time
-        approvedBy:
-          type: string
-        approvedAt:
-          type: string
-          format: date-time
-        rejectionReason:
-          type: string
-        audit:
-          $ref: '#/components/schemas/Audit'
+    SubdomainRequest:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum: [ BusinessSubdomain ]
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Pattern(regexp="BusinessSubdomain", message="{br.com.jstack.request.subdomain.kind.enum}")
+            spec:
+              type: object
+              required: [ acronym, domainAcronym ]
+              properties:
+                acronym:
+                  $ref: '#/components/schemas/SubAcronymParameter'
+                domainAcronym:
+                  $ref: '#/components/schemas/DomainAcronymParameter'
+                description:
+                  type: string
+                  minLength: 3
+                  maxLength: 255
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(min=3, max=255, message="{br.com.jstack.request.subdomain.description.size}")
+                capabilities:
+                  type: array
+                  uniqueItems: true
+                  minItems: 0
+                  maxItems: 200
+                  items: { $ref: '#/components/schemas/CapSlugParameter' }
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(max=200, message="{br.com.jstack.request.subdomain.capabilities.size}")
 
-    Audit:
-      type: object
-      properties:
-        createdBy:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedBy:
-          type: string
-        updatedAt:
-          type: string
-          format: date-time
+    CapabilityRequest:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum: [ Capability ]
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Pattern(regexp="Capability", message="{br.com.jstack.request.capability.kind.enum}")
+            spec:
+              type: object
+              required: [ slug ]
+              properties:
+                slug:
+                  $ref: '#/components/schemas/CapSlugParameter'
+                category:
+                  type: string
+                  enum: [ Business, Technical ]
+                  default: Business
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Pattern(regexp="Business|Technical", message="{br.com.jstack.request.capability.category.enum}")
+                owners:
+                  type: array
+                  items: { type: string, enum: [ domain, subdomain ] }
+                  uniqueItems: true
+                  minItems: 0
+                  maxItems: 10
+                  x-field-extra-annotation: |
+                    @jakarta.validation.constraints.Size(max=10, message="{br.com.jstack.request.capability.owners.size}")
 
-    ErrorResponse:
+    LinkSubdomainsRequest:
       type: object
-      required: [ timestamp, codeStatus, messageStatus, errors, path ]
+      required: [ items ]
       properties:
-        timestamp:
-          type: string
-          format: date-time
-          example: '2025-06-25T12:34:56Z'
+        items:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 200
+          items:
+            type: object
+            required: [ subAcronym ]
+            properties:
+              subAcronym: { $ref: '#/components/schemas/SubAcronymParameter' }
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=1, max=200, message="{br.com.jstack.request.linkSubdomains.items.size}")
+
+    SetParentDomainRequest:
+      type: object
+      required: [ domainAcronym ]
+      properties:
+        domainAcronym: { $ref: '#/components/schemas/DomainAcronymParameter' }
+
+    LinkCapabilitiesRequest:
+      type: object
+      required: [ items ]
+      properties:
+        items:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 200
+          items:
+            type: object
+            required: [ capSlug ]
+            properties:
+              capSlug: { $ref: '#/components/schemas/CapSlugParameter' }
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=1, max=200, message="{br.com.jstack.request.linkCapabilities.items.size}")
+
+    # ---------- Responses ----------
+    ItemResponse:
+      type: object
+      required: [ codeStatus, messageStatus, timestamp, path, data ]
+      properties:
         codeStatus:
           type: integer
           format: int32
-          example: 400
+          minimum: 100
+          maximum: 599
+          example: 200
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Min(value=100, message="{br.com.jstack.response.codeStatus.min}")
+            @jakarta.validation.constraints.Max(value=599, message="{br.com.jstack.response.codeStatus.max}")
         messageStatus:
           type: string
-          example: Invalid input data
-        errors:
-          type: array
-          items:
-            type: string
-          example:
-            - "name: must not be blank"
-            - "status: must be one of [ACTIVE, INACTIVE, DEPRECATED]"
+          minLength: 2
+          maxLength: 60
+          example: "OK"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=2, max=60, message="{br.com.jstack.response.messageStatus.size}")
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-09-22T12:34:56Z"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.PastOrPresent(message="{br.com.jstack.response.timestamp.pastOrPresent}")
         path:
           type: string
-          example: /v1/tenant-companies
+          minLength: 1
+          maxLength: 200
+          example: "/v1/domains/fina"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=1, max=200, message="{br.com.jstack.response.path.size}")
+        requestId:
+          type: string
+          minLength: 8
+          maxLength: 100
+          example: "9c2d3a1f-52a1-4f6e-9b7b-58f1e6f2e3a0"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=8, max=100, message="{br.com.jstack.response.requestId.size}")
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/DomainRequest'
+            - $ref: '#/components/schemas/SubdomainRequest'
+            - $ref: '#/components/schemas/CapabilityRequest'
+            - $ref: '#/components/schemas/TenantRequest'
+
+    PagedListResponse:
+      type: object
+      required: [ codeStatus, messageStatus, timestamp, path, page, items ]
+      properties:
+        codeStatus:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+          example: 200
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Min(value=100, message="{br.com.jstack.response.codeStatus.min}")
+            @jakarta.validation.constraints.Max(value=599, message="{br.com.jstack.response.codeStatus.max}")
+        messageStatus:
+          type: string
+          minLength: 2
+          maxLength: 60
+          example: "OK"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=2, max=60, message="{br.com.jstack.response.messageStatus.size}")
+        timestamp:
+          type: string
+          format: date-time
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.PastOrPresent(message="{br.com.jstack.response.timestamp.pastOrPresent}")
+        path:
+          type: string
+          minLength: 1
+          maxLength: 200
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=1, max=200, message="{br.com.jstack.response.path.size}")
+        requestId:
+          type: string
+          minLength: 8
+          maxLength: 100
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=8, max=100, message="{br.com.jstack.response.requestId.size}")
+        page:
+          type: object
+          required: [ size, number, totalElements, totalPages, hasNext ]
+          properties:
+            size:
+              type: integer
+              minimum: 1
+              maximum: 200
+              example: 20
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Min(value=1, message="{br.com.jstack.response.page.size.min}")
+                @jakarta.validation.constraints.Max(value=200, message="{br.com.jstack.response.page.size.max}")
+            number:
+              type: integer
+              minimum: 0
+              example: 0
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Min(value=0, message="{br.com.jstack.response.page.number.min}")
+            totalElements:
+              type: integer
+              minimum: 0
+              example: 137
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Min(value=0, message="{br.com.jstack.response.page.totalElements.min}")
+            totalPages:
+              type: integer
+              minimum: 0
+              example: 7
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Min(value=0, message="{br.com.jstack.response.page.totalPages.min}")
+            hasNext:
+              type: boolean
+              example: true
+            nextCursor:
+              type: string
+              nullable: true
+              minLength: 1
+              maxLength: 500
+              x-field-extra-annotation: |
+                @jakarta.validation.constraints.Size(min=1, max=500, message="{br.com.jstack.response.page.nextCursor.size}")
+        items:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/DomainRequest'
+              - $ref: '#/components/schemas/SubdomainRequest'
+              - $ref: '#/components/schemas/CapabilityRequest'
+              - $ref: '#/components/schemas/TenantRequest'
+
+    MultiStatusItemResponse:
+      type: object
+      required: [ target, status, message ]
+      properties:
+        target:
+          type: object
+          additionalProperties: true
+        status:
+          type: integer
+          minimum: 100
+          maximum: 599
+          example: 204
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Min(value=100, message="{br.com.jstack.response.multistatus.status.min}")
+            @jakarta.validation.constraints.Max(value=599, message="{br.com.jstack.response.multistatus.status.max}")
+        message:
+          type: string
+          minLength: 2
+          maxLength: 120
+          example: "Linked"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=2, max=120, message="{br.com.jstack.response.multistatus.message.size}")
+        data:
+          type: object
+          nullable: true
+
+    MultiStatusResponse:
+      type: object
+      required: [ codeStatus, messageStatus, timestamp, path, results ]
+      properties:
+        codeStatus:
+          type: integer
+          example: 207
+        messageStatus:
+          type: string
+          example: "Multi-Status"
+        timestamp:
+          type: string
+          format: date-time
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.PastOrPresent(message="{br.com.jstack.response.timestamp.pastOrPresent}")
+        path:
+          type: string
+          minLength: 1
+          maxLength: 200
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=1, max=200, message="{br.com.jstack.response.path.size}")
+        requestId:
+          type: string
+          minLength: 8
+          maxLength: 100
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=8, max=100, message="{br.com.jstack.response.requestId.size}")
+        results:
+          type: array
+          items: { $ref: '#/components/schemas/MultiStatusItemResponse' }
+
+    StatusErrorResponse:
+      type: object
+      required: [ type, title, status, detail, instance ]
+      properties:
+        type:
+          type: string
+          format: uri
+          minLength: 3
+          maxLength: 200
+          example: "https://errors.jstack.com.br/catalog/unique-constraint"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=3, max=200, message="{br.com.jstack.error.type.size}")
+        title:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: "Conflict"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=2, max=100, message="{br.com.jstack.error.title.size}")
+        status:
+          type: integer
+          minimum: 100
+          maximum: 599
+          example: 409
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Min(value=100, message="{br.com.jstack.error.status.min}")
+            @jakarta.validation.constraints.Max(value=599, message="{br.com.jstack.error.status.max}")
+        detail:
+          type: string
+          minLength: 3
+          maxLength: 500
+          example: "Domain acronym 'fina' already exists in namespace 'vivo'."
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=3, max=500, message="{br.com.jstack.error.detail.size}")
+        instance:
+          type: string
+          minLength: 1
+          maxLength: 200
+          example: "/v1/domains"
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=1, max=200, message="{br.com.jstack.error.instance.size}")
+        requestId:
+          type: string
+          minLength: 8
+          maxLength: 100
+          example: "9c2d3a1f-52a1-..."
+          x-field-extra-annotation: |
+            @jakarta.validation.constraints.Size(min=8, max=100, message="{br.com.jstack.error.requestId.size}")
