@@ -112,3 +112,4 @@ logs/
 .project
 .classpath
 .settings/
+/target/classes/
