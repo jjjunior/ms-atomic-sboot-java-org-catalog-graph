@@ -1,5 +1,6 @@
 package br.com.jstack.org.catalog.graph.application.port.input;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class DomainInputPort implements
 	
 	@Override
 	public List<DomainAggregate> retrieveAll() {
-		return outputPort.findAll().stream().collect(Collectors.toList());
+		return new ArrayList<>(outputPort.findAll());
 	}
 	
 	@Override

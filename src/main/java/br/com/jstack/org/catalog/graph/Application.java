@@ -8,7 +8,7 @@ import org.springframework.data.neo4j.repository.config.EnableReactiveNeo4jRepos
 @SpringBootApplication
 public class Application {
 	
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 	

@@ -29,10 +29,7 @@ public class TenantPersistenceAdapter implements TenantOutputPort {
 	@Override
 	public TenantAggregate findById(String tenantId) {
 		Optional<TenantNode> tenantCompanyNode = repository.findById(tenantId);
-		if (tenantCompanyNode.isPresent()) {
-			return mapper.nodeToDomain(tenantCompanyNode.get());
-		}
-		return null;
+		return tenantCompanyNode.map(mapper::nodeToDomain).orElse(null);
 	}
 	
 	@Override

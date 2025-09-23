@@ -570,7 +570,7 @@ components:
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.parameter.domainAcronym.notblank}")
         @jakarta.validation.constraints.Size(min=3, max=15, message="{br.com.jstack.parameter.domainAcronym.size}")
-        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,15}$", message="{br.com.jstack.parameter.domainAcronym.pattern}")
+        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,15}$", message="{br.com.jstack.parameter.domainAcronym.regexp}")
 
     SubAcronymParameter:
       type: string
@@ -582,7 +582,7 @@ components:
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.parameter.subAcronym.notblank}")
         @jakarta.validation.constraints.Size(min=3, max=20, message="{br.com.jstack.parameter.subAcronym.size}")
-        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,20}$", message="{br.com.jstack.parameter.subAcronym.pattern}")
+        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,20}$", message="{br.com.jstack.parameter.subAcronym.regexp}")
 
     CapSlugParameter:
       type: string
@@ -594,7 +594,7 @@ components:
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.parameter.capSlug.notblank}")
         @jakarta.validation.constraints.Size(min=3, max=40, message="{br.com.jstack.parameter.capSlug.size}")
-        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,40}$", message="{br.com.jstack.parameter.capSlug.pattern}")
+        @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,40}$", message="{br.com.jstack.parameter.capSlug.regexp}")
 
     # ---------- Envelope base (compartilhado) ----------
     EnvelopeBase:
@@ -630,7 +630,7 @@ components:
               x-field-extra-annotation: |
                 @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.metadata.name.notblank}")
                 @jakarta.validation.constraints.Size(min=3, max=30, message="{br.com.jstack.metadata.name.size}")
-                @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,30}$", message="{br.com.jstack.metadata.name.pattern}")
+                @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,30}$", message="{br.com.jstack.metadata.name.regexp}")
             description:
               type: string
               minLength: 3
