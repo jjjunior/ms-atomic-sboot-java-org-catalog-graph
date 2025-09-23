@@ -1,13 +1,13 @@
 package br.com.jstack.org.catalog.graph.framework.adapter.output.repository;
 
-import br.com.jstack.org.catalog.graph.domain.node.BusinessDomainNode;
+import br.com.jstack.org.catalog.graph.framework.adapter.output.node.DomainNode;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface BusinessDomainRepository extends Neo4jRepository<BusinessDomainNode, String> {
+public interface DomainRepository extends Neo4jRepository<DomainNode, String> {
 	
 	@Query("""
 		MATCH (d:BusinessDomain{ tenantId:$tenantId, acronym:$acronym})

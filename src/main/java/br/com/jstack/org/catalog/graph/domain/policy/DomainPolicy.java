@@ -1,7 +1,7 @@
 package br.com.jstack.org.catalog.graph.domain.policy;
 
-import br.com.jstack.org.catalog.graph.application.port.output.TenantCompanyOutputPort;
-import br.com.jstack.org.catalog.graph.domain.model.TenantCompany;
+import br.com.jstack.org.catalog.graph.application.port.output.DomainOutputPort;
+import br.com.jstack.org.catalog.graph.domain.aggregate.DomainAggregate;
 import br.com.jstack.org.catalog.graph.domain.specification.SpecificationFactory;
 import br.com.jstack.org.catalog.graph.domain.vo.OperationType;
 import lombok.RequiredArgsConstructor;
@@ -9,20 +9,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TenantCompanyPolicy implements ValidationPolicy<TenantCompany> {
+public class DomainPolicy implements ValidationPolicy<DomainAggregate> {
 	
-	private final SpecificationFactory    factory;
-	private final TenantCompanyOutputPort outputPort;
+	private final SpecificationFactory specFactory;
+	private final DomainOutputPort     outputPort;
 	
 	@Override
-	public void validate(TenantCompany tenant, OperationType operation) {
-		
-		if (operation == OperationType.CREATE) {
-			var uniqueNameSpec = factory.uniqueName(outputPort::existsByTenantId, TenantCompany::tenantId);
-			if (!uniqueNameSpec.isSatisfiedBy(tenant)) {
-				throw new IllegalArgumentException("Tenant Company must be unique (tenantId).");
-			}
-		}
+	public void validate(DomainAggregate domainAggregate, OperationType operation) {
+
+//		if (operation == OperationType.CREATE) {
+//			Specification<BusinessDomain> uniqueNameSpec = specFactory.uniqueName(outputPort::existsByName, BusinessDomain::getName);
+//			if (!uniqueNameSpec.isSatisfiedBy(domain)) {
+//				throw new IllegalArgumentException("Business Domain Name must be unique.");
+//			}
+//		}
 //
 //		if (operation == OperationType.UPDATE) {
 //			Specification<BusinessDomain> uniqueNameExclIdSpec = specFactory.uniqueNameExcludingSelf(outputPort::existsByNameAndIdNot, BusinessDomain::getName, BusinessDomain::getId);
@@ -38,7 +38,7 @@ public class TenantCompanyPolicy implements ValidationPolicy<TenantCompany> {
 	}
 	
 	@Override
-	public Class<TenantCompany> getTargetType() {
-		return TenantCompany.class;
+	public Class<DomainAggregate> getTargetType() {
+		return DomainAggregate.class;
 	}
 }
