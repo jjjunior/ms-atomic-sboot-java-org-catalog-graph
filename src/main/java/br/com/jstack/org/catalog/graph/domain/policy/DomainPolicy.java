@@ -1,7 +1,7 @@
 package br.com.jstack.org.catalog.graph.domain.policy;
 
 import br.com.jstack.org.catalog.graph.application.port.output.DomainOutputPort;
-import br.com.jstack.org.catalog.graph.domain.aggregate.DomainAggregate;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Domain;
 import br.com.jstack.org.catalog.graph.domain.specification.SpecificationFactory;
 import br.com.jstack.org.catalog.graph.domain.vo.OperationType;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class DomainPolicy implements ValidationPolicy<DomainAggregate> {
+public class DomainPolicy implements ValidationPolicy<Domain> {
 	
 	private final SpecificationFactory specFactory;
 	private final DomainOutputPort     outputPort;
 	
 	@Override
-	public void validate(DomainAggregate domainAggregate, OperationType operation) {
+	public void validate(Domain domain, OperationType operation) {
 
 //		if (operation == OperationType.CREATE) {
 //			Specification<BusinessDomain> uniqueNameSpec = specFactory.uniqueName(outputPort::existsByName, BusinessDomain::getName);
@@ -38,7 +38,7 @@ public class DomainPolicy implements ValidationPolicy<DomainAggregate> {
 	}
 	
 	@Override
-	public Class<DomainAggregate> getTargetType() {
-		return DomainAggregate.class;
+	public Class<Domain> getTargetType() {
+		return Domain.class;
 	}
 }

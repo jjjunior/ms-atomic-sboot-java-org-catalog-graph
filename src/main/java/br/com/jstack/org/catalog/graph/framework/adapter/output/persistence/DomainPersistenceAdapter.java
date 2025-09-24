@@ -3,7 +3,7 @@ package br.com.jstack.org.catalog.graph.framework.adapter.output.persistence;
 import java.util.List;
 
 import br.com.jstack.org.catalog.graph.application.port.output.DomainOutputPort;
-import br.com.jstack.org.catalog.graph.domain.aggregate.DomainAggregate;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Domain;
 import br.com.jstack.org.catalog.graph.framework.adapter.mapper.DomainMapper;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.node.DomainNode;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.repository.DomainRepository;
@@ -25,14 +25,14 @@ public class DomainPersistenceAdapter implements DomainOutputPort {
 	
 	@Transactional
 	@Override
-	public DomainAggregate save(DomainAggregate businessDomainAggregate) {
-		DomainNode node  = mapper.toNode(businessDomainAggregate);
+	public Domain save(Domain businessDomain) {
+		DomainNode node  = mapper.toNode(businessDomain);
 		DomainNode saved = repository.save(node);
 		return mapper.toDomain(saved);
 	}
 	
 	@Override
-	public DomainAggregate findById(String id) {
+	public Domain findById(String id) {
 		DomainNode node = repository.findById(id).isPresent() ? repository.findById(id).get() : null;
 		if (node != null) {
 			return mapper.toDomain(node);
@@ -41,7 +41,7 @@ public class DomainPersistenceAdapter implements DomainOutputPort {
 	}
 	
 	@Override
-	public List<DomainAggregate> findAll() {
+	public List<Domain> findAll() {
 		return repository.findAll().stream().map(mapper::toDomain).toList();
 	}
 	
@@ -53,7 +53,7 @@ public class DomainPersistenceAdapter implements DomainOutputPort {
 	
 	@Transactional
 	@Override
-	public DomainAggregate update(DomainAggregate patch) {
+	public Domain update(Domain patch) {
 		DomainNode node  = mapper.toNode(patch);
 		DomainNode saved = repository.save(node);
 		return mapper.toDomain(saved);
