@@ -1,4 +1,4 @@
-package br.com.jstack.org.catalog.graph.framework.adapter.exception;
+package br.com.jstack.org.catalog.graph.framework.exception;
 
 import java.net.URI;
 import java.util.NoSuchElementException;
