@@ -2,7 +2,6 @@ package br.com.jstack.org.catalog.graph.application.port.input;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import br.com.jstack.org.catalog.graph.application.port.output.TenantOutputPort;
 import br.com.jstack.org.catalog.graph.application.usecase.CreateUseCase;
@@ -10,7 +9,7 @@ import br.com.jstack.org.catalog.graph.application.usecase.DeleteByIdUseCase;
 import br.com.jstack.org.catalog.graph.application.usecase.RetrieveAllUseCase;
 import br.com.jstack.org.catalog.graph.application.usecase.RetrieveByIdUseCase;
 import br.com.jstack.org.catalog.graph.application.usecase.UpdateUseCase;
-import br.com.jstack.org.catalog.graph.domain.aggregate.TenantAggregate;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Tenant;
 import br.com.jstack.org.catalog.graph.domain.policy.PolicyResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,35 +20,35 @@ import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.UPDATE;
 @Component
 @RequiredArgsConstructor
 public class TenantInputPort implements
-	CreateUseCase<TenantAggregate>,
-	RetrieveByIdUseCase<TenantAggregate, String>,
-	RetrieveAllUseCase<TenantAggregate>,
-	UpdateUseCase<TenantAggregate>,
-	DeleteByIdUseCase<TenantAggregate, String> {
+	CreateUseCase<Tenant>,
+	RetrieveByIdUseCase<Tenant, String>,
+	RetrieveAllUseCase<Tenant>,
+	UpdateUseCase<Tenant>,
+	DeleteByIdUseCase<Tenant, String> {
 	
-	private final TenantOutputPort                outputPort;
-	private final PolicyResolver<TenantAggregate> policyResolver;
+	private final TenantOutputPort       outputPort;
+	private final PolicyResolver<Tenant> policyResolver;
 	
 	@Override
-	public TenantAggregate create(TenantAggregate tenantAggregateCompany) {
-		TenantAggregate tenantAggregate = TenantAggregate.create(tenantAggregateCompany, policyResolver.resolve(CREATE, TenantAggregate.class));
-		return outputPort.save(tenantAggregate);
+	public Tenant create(Tenant tenantCompany) {
+		Tenant tenant = Tenant.create(tenantCompany, policyResolver.resolve(CREATE, Tenant.class));
+		return outputPort.save(tenant);
 	}
 	
 	@Override
-	public TenantAggregate retrieveById(String id) {
+	public Tenant retrieveById(String id) {
 		return outputPort.findById(id);
 	}
 	
 	@Override
-	public List<TenantAggregate> retrieveAll() {
+	public List<Tenant> retrieveAll() {
 		return new ArrayList<>(outputPort.findAll());
 	}
 	
 	@Override
-	public TenantAggregate update(TenantAggregate tenantAggregateCompany) {
-		TenantAggregate tenantAggregate = tenantAggregateCompany.rename(tenantAggregateCompany.getName(), policyResolver.resolve(UPDATE, TenantAggregate.class));
-		return outputPort.update(tenantAggregate);
+	public Tenant update(Tenant tenantCompany) {
+		Tenant tenant = tenantCompany.rename(tenantCompany.getName(), policyResolver.resolve(UPDATE, Tenant.class));
+		return outputPort.update(tenant);
 	}
 	
 	@Override

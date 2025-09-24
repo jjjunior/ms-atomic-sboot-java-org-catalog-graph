@@ -29,7 +29,7 @@ import static br.com.jstack.org.catalog.graph.domain.vo.TenantStatus.INACTIVE;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "tenantId")
 @Builder(toBuilder = true)
-public class TenantAggregate {
+public class Tenant {
 	private String          tenantId;
 	private String          name;
 	private TenantStatus    status;
@@ -40,8 +40,8 @@ public class TenantAggregate {
 	private Set<DomainNode> businessDomains;
 	
 	
-	public static TenantAggregate create(TenantAggregate tenantAggregateCompany, ValidationPolicy<TenantAggregate> policy) {
-		var tenant = tenantAggregateCompany.toBuilder()
+	public static Tenant create(Tenant tenantCompany, ValidationPolicy<Tenant> policy) {
+		var tenant = tenantCompany.toBuilder()
 			.status(ACTIVE)
 			.build();
 		
@@ -52,7 +52,7 @@ public class TenantAggregate {
 	/**
 	 * Rename command with audit.
 	 */
-	public TenantAggregate rename(String newName, ValidationPolicy<TenantAggregate> policy) {
+	public Tenant rename(String newName, ValidationPolicy<Tenant> policy) {
 		var tenant = this.toBuilder()
 			.name(newName)
 			.build();
@@ -63,7 +63,7 @@ public class TenantAggregate {
 	/**
 	 * Inactivate tenant.
 	 */
-	public TenantAggregate inactivate(ValidationPolicy<TenantAggregate> policy) {
+	public Tenant inactivate(ValidationPolicy<Tenant> policy) {
 		var tenant = this.toBuilder()
 			.status(INACTIVE)
 			.build();
@@ -75,7 +75,7 @@ public class TenantAggregate {
 	/**
 	 * Activate tenant.
 	 */
-	public TenantAggregate activate(ValidationPolicy<TenantAggregate> policy) {
+	public Tenant activate(ValidationPolicy<Tenant> policy) {
 		var tenant = this.toBuilder()
 			.status(ACTIVE)
 			.build();

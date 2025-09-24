@@ -1,6 +1,6 @@
 package br.com.jstack.org.catalog.graph.framework.adapter.mapper;
 
-import br.com.jstack.org.catalog.graph.domain.aggregate.TenantAggregate;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Tenant;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.node.TenantNode;
 import org.mapstruct.Mapper;
 
@@ -8,10 +8,10 @@ import org.mapstruct.Mapper;
 public interface TenantMapper {
 	
 	// Domain -> Node
-	TenantNode domainToNode(TenantAggregate domain);
+	TenantNode domainToNode(Tenant domain);
 	
 	// Node -> Domain
-	TenantAggregate nodeToDomain(TenantNode node);
+	Tenant nodeToDomain(TenantNode node);
 	
-	TenantAggregate requestToDomain(TenantAggregate tenantAggregate);
+	Tenant requestToDomain(Tenant tenant);
 }
