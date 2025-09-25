@@ -1,4 +1,4 @@
-package br.com.jstack.org.catalog.graph.application.usecase;
+package br.com.jstack.org.catalog.graph.application.port.input.shared;
 
 import java.util.List;
 
