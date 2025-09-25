@@ -11,7 +11,7 @@ set -euo pipefail
 #   - usar o bloco "via Docker" mais abaixo
 #
 # Variáveis (defina por ambiente, .env ou inline):
-#   AURA_URI=neo4j+s://<id>.databases.neo4j.io
+#   AURA_URI=neo4j+s://<name>.databases.neo4j.io
 #   AURA_USER=neo4j
 #   AURA_PASSWORD=********
 #   AURA_DATABASE=neo4j            # opcional (default: neo4j)
