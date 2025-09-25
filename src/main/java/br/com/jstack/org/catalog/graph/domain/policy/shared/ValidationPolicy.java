@@ -1,4 +1,4 @@
-package br.com.jstack.org.catalog.graph.domain.policy;
+package br.com.jstack.org.catalog.graph.domain.policy.shared;
 
 import br.com.jstack.org.catalog.graph.domain.vo.OperationType;
 
