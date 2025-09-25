@@ -20,7 +20,7 @@ public class TenantPersistenceAdapter implements TenantOutputPort {
 	private final TenantMapper     mapper;
 	
 	@Override
-	public Tenant save(Tenant tenant) {
+	public Tenant insert(Tenant tenant) {
 		TenantNode node  = mapper.domainToNode(tenant);
 		TenantNode saved = repository.save(node);
 		return mapper.nodeToDomain(saved);
