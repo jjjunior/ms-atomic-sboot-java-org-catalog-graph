@@ -25,8 +25,8 @@ public class DomainPersistenceAdapter implements DomainOutputPort {
 	
 	@Transactional
 	@Override
-	public Domain save(Domain businessDomain) {
-		DomainNode node  = mapper.toNode(businessDomain);
+	public Domain insert(Domain domain) {
+		DomainNode node  = mapper.toNode(domain);
 		DomainNode saved = repository.save(node);
 		return mapper.toDomain(saved);
 	}
@@ -47,15 +47,16 @@ public class DomainPersistenceAdapter implements DomainOutputPort {
 	
 	@Transactional
 	@Override
-	public void deleteById(String id) {
-		repository.deleteById(id);
-	}
-	
-	@Transactional
-	@Override
 	public Domain update(Domain patch) {
 		DomainNode node  = mapper.toNode(patch);
 		DomainNode saved = repository.save(node);
 		return mapper.toDomain(saved);
 	}
+	
+	@Transactional
+	@Override
+	public void deleteById(String id) {
+		repository.deleteById(id);
+	}
+	
 }

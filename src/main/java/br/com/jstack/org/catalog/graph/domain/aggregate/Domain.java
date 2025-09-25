@@ -2,7 +2,7 @@ package br.com.jstack.org.catalog.graph.domain.aggregate;
 
 import java.time.LocalDateTime;
 
-import br.com.jstack.org.catalog.graph.domain.policy.ValidationPolicy;
+import br.com.jstack.org.catalog.graph.domain.policy.shared.ValidationPolicy;
 import br.com.jstack.org.catalog.graph.domain.vo.DomainStatus;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.node.TenantNode;
 import lombok.AllArgsConstructor;

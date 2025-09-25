@@ -2,6 +2,7 @@ package br.com.jstack.org.catalog.graph.domain.policy;
 
 import br.com.jstack.org.catalog.graph.application.port.output.DomainOutputPort;
 import br.com.jstack.org.catalog.graph.domain.aggregate.Domain;
+import br.com.jstack.org.catalog.graph.domain.policy.shared.ValidationPolicy;
 import br.com.jstack.org.catalog.graph.domain.specification.SpecificationFactory;
 import br.com.jstack.org.catalog.graph.domain.vo.OperationType;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class DomainPolicy implements ValidationPolicy<Domain> {
 //		}
 //
 //		if (operation == OperationType.UPDATE) {
-//			Specification<BusinessDomain> uniqueNameExclIdSpec = specFactory.uniqueNameExcludingSelf(outputPort::existsByNameAndIdNot, BusinessDomain::getName, BusinessDomain::getId);
+//			Specification<BusinessDomain> uniqueNameExclIdSpec = specFactory.uniqueNameExcludingSelf(outputPort::existsByNameAndIdNot, BusinessDomain::getName, BusinessDomain::getName);
 //			if (!uniqueNameExclIdSpec.isSatisfiedBy(domain)) {
 //				throw new IllegalArgumentException("Business Domain Name must be unique (excluding self).");
 //			}
