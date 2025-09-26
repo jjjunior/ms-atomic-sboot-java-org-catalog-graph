@@ -52,6 +52,8 @@ paths:
       requestBody:
         required: true
         content: { application/json: { schema: { $ref: '#/components/schemas/TenantRequest' } } }
+      x-parameter-extra-annotation: |
+        @jakarta.validation.Valid
       responses:
         '201': { $ref: '#/components/responses/CreatedItemResponse' }
         '409': { $ref: '#/components/responses/StatusError' }
@@ -660,7 +662,6 @@ components:
           properties:
             lifecycle:
               type: string
-              enum: [ ACTIVE, INACTIVE, DEPRECATED ]
               default: ACTIVE
               x-field-extra-annotation: |
                 @jakarta.validation.constraints.Pattern(regexp="ACTIVE|INACTIVE|DEPRECATED", message="{br.com.jstack.status.lifecycle.enum}")
@@ -698,19 +699,18 @@ components:
           properties:
             kind:
               type: string
-              enum: [ Tenant ]
               x-field-extra-annotation: |
                 @jakarta.validation.constraints.Pattern(regexp="Tenant", message="{br.com.jstack.request.tenant.kind.enum}")
             spec:
               type: object
               properties:
-                displayName:
+                name:
                   type: string
                   minLength: 2
                   maxLength: 40
                   x-field-extra-annotation: |
-                    @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.tenant.displayName.notblank}")
-                    @jakarta.validation.constraints.Size(min=2, max=40, message="{br.com.jstack.request.tenant.displayName.size}")
+                    @jakarta.validation.constraints.NotBlank(message="{br.com.jstack.request.tenant.name.notblank}")
+                    @jakarta.validation.constraints.Size(min=2, max=40, message="{br.com.jstack.request.tenant.name.size}")
                 owner:
                   type: string
                   minLength: 2
@@ -725,7 +725,6 @@ components:
           properties:
             kind:
               type: string
-              enum: [ BusinessDomain ]
               x-field-extra-annotation: |
                 @jakarta.validation.constraints.Pattern(regexp="BusinessDomain", message="{br.com.jstack.request.domain.kind.enum}")
             spec:
@@ -756,7 +755,6 @@ components:
           properties:
             kind:
               type: string
-              enum: [ BusinessSubdomain ]
               x-field-extra-annotation: |
                 @jakarta.validation.constraints.Pattern(regexp="BusinessSubdomain", message="{br.com.jstack.request.subdomain.kind.enum}")
             spec:
@@ -789,7 +787,6 @@ components:
           properties:
             kind:
               type: string
-              enum: [ Capability ]
               x-field-extra-annotation: |
                 @jakarta.validation.constraints.Pattern(regexp="Capability", message="{br.com.jstack.request.capability.kind.enum}")
             spec:
@@ -800,7 +797,6 @@ components:
                   $ref: '#/components/schemas/CapSlugParameter'
                 category:
                   type: string
-                  enum: [ Business, Technical ]
                   default: Business
                   x-field-extra-annotation: |
                     @jakarta.validation.constraints.Pattern(regexp="Business|Technical", message="{br.com.jstack.request.capability.category.enum}")

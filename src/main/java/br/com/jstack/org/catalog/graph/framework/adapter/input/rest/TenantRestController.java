@@ -1,12 +1,12 @@
 package br.com.jstack.org.catalog.graph.framework.adapter.input.rest;
 
 import br.com.jstack.org.catalog.graph.api.TenantsApi;
-import br.com.jstack.org.catalog.graph.application.usecase.CreateUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.DeleteByIdUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.RetrieveAllUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.RetrieveByIdUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.UpdateUseCase;
-import br.com.jstack.org.catalog.graph.domain.aggregate.TenantAggregate;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.CreateUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.DeleteByIdUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.RetrieveAllUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.RetrieveByIdUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.UpdateUseCase;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Tenant;
 import br.com.jstack.org.catalog.graph.framework.adapter.mapper.TenantMapper;
 import br.com.jstack.org.catalog.graph.model.ItemResponse;
 import br.com.jstack.org.catalog.graph.model.PagedListResponse;
@@ -17,40 +17,43 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-public class TenantRestAdapter implements TenantsApi {
+public class TenantRestController implements TenantsApi {
 	
-	private final TenantMapper                                 mapper;
-	private final CreateUseCase<TenantAggregate>               createUseCase;
-	private final RetrieveByIdUseCase<TenantAggregate, String> retrieveByIdUseCase;
-	private final RetrieveAllUseCase<TenantAggregate>          retrieveAllUseCase;
-	private final UpdateUseCase<TenantAggregate>               updateUseCase;
-	private final DeleteByIdUseCase<TenantAggregate, String>   deleteUseCase;
+	private final TenantMapper                        mapper;
+	private final CreateUseCase<Tenant>               createUseCase;
+	private final RetrieveByIdUseCase<Tenant, String> retrieveByIdUseCase;
+	private final RetrieveAllUseCase<Tenant>          retrieveAllUseCase;
+	private final UpdateUseCase<Tenant>               updateUseCase;
+	private final DeleteByIdUseCase<Tenant, String>   deleteUseCase;
 	
 	@Override
 	public ResponseEntity<ItemResponse> createTenant(TenantRequest tenantRequest) {
-		return TenantsApi.super.createTenant(tenantRequest);
+		Tenant       tenant   = mapper.requestToDomain(tenantRequest);
+		Tenant       created  = createUseCase.create(tenant);
+		ItemResponse response = mapper.domainToResponse(created);
+		return ResponseEntity.status(201).body(response);
 	}
 	
 	@Override
 	public ResponseEntity<Void> deleteTenant(String tenantId) {
-		return TenantsApi.super.deleteTenant(tenantId);
+		return ResponseEntity.status(501).build(); // Not Implemented
 	}
 	
 	@Override
 	public ResponseEntity<ItemResponse> getTenant(String tenantId) {
-		return TenantsApi.super.getTenant(tenantId);
+		return ResponseEntity.status(501).build(); // Not Implemented
 	}
 	
 	@Override
 	public ResponseEntity<PagedListResponse> listTenants(String q, Integer page, Integer size) {
-		return TenantsApi.super.listTenants(q, page, size);
+		return ResponseEntity.status(501).build(); // Not Implemented
 	}
 	
 	@Override
 	public ResponseEntity<ItemResponse> updateTenant(String tenantId, TenantRequest tenantRequest) {
-		return TenantsApi.super.updateTenant(tenantId, tenantRequest);
+		return ResponseEntity.status(501).build(); // Not Implemented
 	}
-
+}
 
 //	@Override
 //	public ResponseEntity<TenantCompanyResponse> createTenant(TenantCompanyRequest tenantCompanyRequest) {
@@ -95,4 +98,3 @@ public class TenantRestAdapter implements TenantsApi {
 //
 //		return ResponseEntity.ok(response);
 //	}
-}

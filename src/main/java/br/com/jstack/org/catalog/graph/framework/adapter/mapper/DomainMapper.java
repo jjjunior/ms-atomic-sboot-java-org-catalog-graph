@@ -1,15 +1,15 @@
 package br.com.jstack.org.catalog.graph.framework.adapter.mapper;
 
-import br.com.jstack.org.catalog.graph.domain.aggregate.DomainAggregate;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Domain;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.node.DomainNode;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface DomainMapper {
 	
-	DomainAggregate toDomain(DomainAggregate domainAggregate);
+	Domain toDomain(Domain domain);
 	
-	DomainNode toNode(DomainAggregate domainAggregate);
+	DomainNode toNode(Domain domain);
 	
-	DomainAggregate toDomain(DomainNode node);
+	Domain toDomain(DomainNode node);
 }

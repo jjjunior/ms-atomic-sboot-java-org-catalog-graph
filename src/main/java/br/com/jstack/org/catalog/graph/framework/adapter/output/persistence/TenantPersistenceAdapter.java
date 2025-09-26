@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.jstack.org.catalog.graph.application.port.output.TenantOutputPort;
-import br.com.jstack.org.catalog.graph.domain.aggregate.TenantAggregate;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Tenant;
 import br.com.jstack.org.catalog.graph.framework.adapter.mapper.TenantMapper;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.node.TenantNode;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.repository.TenantRepository;
@@ -20,20 +20,20 @@ public class TenantPersistenceAdapter implements TenantOutputPort {
 	private final TenantMapper     mapper;
 	
 	@Override
-	public TenantAggregate save(TenantAggregate tenantAggregate) {
-		TenantNode node  = mapper.domainToNode(tenantAggregate);
+	public Tenant insert(Tenant tenant) {
+		TenantNode node  = mapper.domainToNode(tenant);
 		TenantNode saved = repository.save(node);
 		return mapper.nodeToDomain(saved);
 	}
 	
 	@Override
-	public TenantAggregate findById(String tenantId) {
+	public Tenant findById(String tenantId) {
 		Optional<TenantNode> tenantCompanyNode = repository.findById(tenantId);
 		return tenantCompanyNode.map(mapper::nodeToDomain).orElse(null);
 	}
 	
 	@Override
-	public List<TenantAggregate> findAll() {
+	public List<Tenant> findAll() {
 		return repository.findAll().stream().map(mapper::nodeToDomain).toList();
 	}
 	
@@ -44,8 +44,8 @@ public class TenantPersistenceAdapter implements TenantOutputPort {
 	}
 	
 	@Override
-	public TenantAggregate update(TenantAggregate tenantAggregate) {
-		TenantNode node  = mapper.domainToNode(tenantAggregate);
+	public Tenant update(Tenant tenant) {
+		TenantNode node  = mapper.domainToNode(tenant);
 		TenantNode saved = repository.save(node);
 		return mapper.nodeToDomain(saved);
 	}

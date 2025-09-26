@@ -1,12 +1,12 @@
 package br.com.jstack.org.catalog.graph.framework.adapter.input.rest;
 
 import br.com.jstack.org.catalog.graph.api.DomainsApi;
-import br.com.jstack.org.catalog.graph.application.usecase.CreateUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.DeleteByIdUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.RetrieveAllUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.RetrieveByIdUseCase;
-import br.com.jstack.org.catalog.graph.application.usecase.UpdateUseCase;
-import br.com.jstack.org.catalog.graph.domain.aggregate.DomainAggregate;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.CreateUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.DeleteByIdUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.RetrieveAllUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.RetrieveByIdUseCase;
+import br.com.jstack.org.catalog.graph.application.port.input.shared.UpdateUseCase;
+import br.com.jstack.org.catalog.graph.domain.aggregate.Domain;
 import br.com.jstack.org.catalog.graph.framework.adapter.mapper.DomainMapper;
 import br.com.jstack.org.catalog.graph.model.DomainRequest;
 import br.com.jstack.org.catalog.graph.model.ItemResponse;
@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-public class DomainRestAdapter implements DomainsApi {
+public class DomainRestController implements DomainsApi {
 	
-	private final DomainMapper                                 mapper;
-	private final CreateUseCase<DomainAggregate>               createUseCase;
-	private final RetrieveByIdUseCase<DomainAggregate, String> retrieveByIdUseCase;
-	private final RetrieveAllUseCase<DomainAggregate>          retrieveAllUseCase;
-	private final UpdateUseCase<DomainAggregate>               updateUseCase;
-	private final DeleteByIdUseCase<DomainAggregate, String>   deleteUseCase;
+	private final DomainMapper                        mapper;
+	private final CreateUseCase<Domain>               createUseCase;
+	private final RetrieveByIdUseCase<Domain, String> retrieveByIdUseCase;
+	private final RetrieveAllUseCase<Domain>          retrieveAllUseCase;
+	private final UpdateUseCase<Domain>               updateUseCase;
+	private final DeleteByIdUseCase<Domain, String>   deleteUseCase;
 	
 	@Override
 	public ResponseEntity<ItemResponse> createDomain(DomainRequest domainRequest, String xNamespace) {

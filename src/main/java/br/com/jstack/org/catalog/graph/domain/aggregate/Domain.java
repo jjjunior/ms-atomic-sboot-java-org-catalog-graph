@@ -2,7 +2,7 @@ package br.com.jstack.org.catalog.graph.domain.aggregate;
 
 import java.time.LocalDateTime;
 
-import br.com.jstack.org.catalog.graph.domain.policy.ValidationPolicy;
+import br.com.jstack.org.catalog.graph.domain.policy.shared.ValidationPolicy;
 import br.com.jstack.org.catalog.graph.domain.vo.DomainStatus;
 import br.com.jstack.org.catalog.graph.framework.adapter.output.node.TenantNode;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ import static br.com.jstack.org.catalog.graph.domain.vo.OperationType.UPDATE;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "canonicalId")
 @Builder(toBuilder = true)
-public class DomainAggregate {
+public class Domain {
 	private String        canonicalId;
 	private String        tenantId;
 	private String        acronym;
@@ -62,7 +62,7 @@ public class DomainAggregate {
 	 * @param policy Policy used to validate invariants
 	 * @return New BusinessDomain instance in PENDING_APPROVAL
 	 */
-	public static DomainAggregate create(DomainAggregate draft, ValidationPolicy<DomainAggregate> policy) {
+	public static Domain create(Domain draft, ValidationPolicy<Domain> policy) {
 		String canonical = draft.getCanonicalId() != null
 			? draft.getCanonicalId()
 			: "domain:%s/%s".formatted(draft.getTenantId(), draft.getAcronym().toLowerCase());
@@ -93,7 +93,7 @@ public class DomainAggregate {
 	 *
 	 * <b>Note:</b> Use explicit commands for lifecycle changes.
 	 */
-	public DomainAggregate update(DomainAggregate changes, ValidationPolicy<DomainAggregate> policy) {
+	public Domain update(Domain changes, ValidationPolicy<Domain> policy) {
 		var next = this.toBuilder()
 			.name(changes.getName() != null ? changes.getName() : this.name)
 			.description(changes.getDescription() != null ? changes.getDescription() : this.description)
@@ -117,7 +117,7 @@ public class DomainAggregate {
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public DomainAggregate approve(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
+	public Domain approve(String actor, LocalDateTime when, ValidationPolicy<Domain> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.ACTIVE)
@@ -142,7 +142,7 @@ public class DomainAggregate {
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public DomainAggregate reject(String actor, LocalDateTime when, String reason, ValidationPolicy<DomainAggregate> policy) {
+	public Domain reject(String actor, LocalDateTime when, String reason, ValidationPolicy<Domain> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.REJECTED)
@@ -167,7 +167,7 @@ public class DomainAggregate {
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public DomainAggregate resubmitForApproval(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
+	public Domain resubmitForApproval(String actor, LocalDateTime when, ValidationPolicy<Domain> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.PENDING_APPROVAL)
@@ -189,7 +189,7 @@ public class DomainAggregate {
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public DomainAggregate deprecate(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
+	public Domain deprecate(String actor, LocalDateTime when, ValidationPolicy<Domain> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.DEPRECATED)
@@ -209,7 +209,7 @@ public class DomainAggregate {
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public DomainAggregate inactivate(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
+	public Domain inactivate(String actor, LocalDateTime when, ValidationPolicy<Domain> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.INACTIVE)
@@ -230,7 +230,7 @@ public class DomainAggregate {
 	 *   <li>Validate transition using {@link ValidationPolicy}</li>
 	 * </ul>
 	 */
-	public DomainAggregate activate(String actor, LocalDateTime when, ValidationPolicy<DomainAggregate> policy) {
+	public Domain activate(String actor, LocalDateTime when, ValidationPolicy<Domain> policy) {
 		var instant = (when != null ? when : LocalDateTime.now());
 		var next = this.toBuilder()
 			.status(DomainStatus.ACTIVE)
