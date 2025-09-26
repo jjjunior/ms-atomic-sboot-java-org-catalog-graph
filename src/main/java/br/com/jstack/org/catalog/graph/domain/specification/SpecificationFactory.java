@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpecificationFactory {
 	
-	public <T> Specification<T> uniqueName(Function<String, Boolean> existsByNameFn,
-	                                       Function<T, String> nameExtractor) {
+	public <T> Specification<T> uniqueName(Function<String, Boolean> existsByNameFn, Function<T, String> nameExtractor) {
 		return new UniqueNameSpec<>(existsByNameFn, nameExtractor);
 	}
 	

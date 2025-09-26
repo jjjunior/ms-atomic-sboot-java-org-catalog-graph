@@ -20,15 +20,15 @@ public class TenantPolicyFactory {
 	private final TenantOutputPort     tenantOut;
 	
 	public ValidationPolicy<Tenant> createPolicy() {
-		Specification<Tenant> uniqueId = specs.uniqueName(tenantOut::existsByTenantId, Tenant::getName);
-		var uniqueIdPolicy = SpecificationPolicyAdapter.of(
-			Tenant.class, uniqueId, () -> new IllegalArgumentException("Tenant name must be unique."), CREATE);
 		
-		return new CompositePolicy<>(Tenant.class)
-			.add(uniqueIdPolicy);
+		Specification<Tenant> uniqueId = specs.uniqueName(tenantOut::existsByTenantId, Tenant::getName);
+		var uniqueIdPolicy = SpecificationPolicyAdapter.of(Tenant.class, uniqueId,
+			() -> new IllegalArgumentException("Tenant name must be unique."), CREATE);
+		
+		return new CompositePolicy<>(Tenant.class).add(uniqueIdPolicy);
 	}
 	
 	public ValidationPolicy<Tenant> updatePolicy() {
-		return new CompositePolicy<>(Tenant.class); // vazio por ora
+		return new CompositePolicy<>(Tenant.class);
 	}
 }

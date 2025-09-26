@@ -33,27 +33,27 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 public class TenantNode {
 	
 	@Id
-	private String              tenantId;
-	private String              kind;
-	private String              description;
-	private String              owner;
-	private Lifecycle           lifecycle;
+	private String        tenantId;
+	private String        kind;
+	private String        description;
+	private String        owner;
+	private Lifecycle     lifecycle;
 	@CreatedBy
-	private String              createdBy;
+	private String        createdBy;
 	@CreatedDate
-	private LocalDateTime       createdAt;
+	private LocalDateTime createdAt;
 	@LastModifiedBy
-	private String              updatedBy;
+	private String        updatedBy;
 	@LastModifiedDate
-	private LocalDateTime       updatedAt;
+	private LocalDateTime updatedAt;
 	
 	@Builder.Default
 	@CompositeProperty(prefix = "labels.")
-	private Map<String,String> labels = new HashMap<>();
+	private Map<String, String> labels = new HashMap<>();
 	
 	@Builder.Default
 	@CompositeProperty(prefix = "ann.")
-	private Map<String,String> annotations = new HashMap<>();
+	private Map<String, String> annotations = new HashMap<>();
 	
 	
 	@Relationship(type = "TENANT_OWNS_DOMAIN", direction = Relationship.Direction.OUTGOING)

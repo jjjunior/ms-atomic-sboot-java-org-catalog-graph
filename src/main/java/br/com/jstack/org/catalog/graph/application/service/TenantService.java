@@ -7,7 +7,6 @@ import br.com.jstack.org.catalog.graph.application.port.input.TenantUseCase;
 import br.com.jstack.org.catalog.graph.application.port.output.TenantOutputPort;
 import br.com.jstack.org.catalog.graph.domain.aggregate.Tenant;
 import br.com.jstack.org.catalog.graph.domain.policy.shared.PolicyResolver;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class TenantService implements TenantUseCase {
 	
 	@Override
 	public Tenant create(Tenant tenant) {
-		policy.validate(CREATE,tenant ,Tenant.class);
+		policy.validate(CREATE, tenant, Tenant.class);
 		return outputPort.insert(tenant);
 	}
 	
@@ -39,7 +38,7 @@ public class TenantService implements TenantUseCase {
 	
 	@Override
 	public Tenant update(Tenant tenant) {
-		policy.validate(UPDATE,tenant ,Tenant.class);
+		policy.validate(UPDATE, tenant, Tenant.class);
 		return outputPort.update(tenant);
 	}
 	

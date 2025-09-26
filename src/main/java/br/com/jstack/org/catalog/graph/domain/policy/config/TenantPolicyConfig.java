@@ -14,7 +14,8 @@ public class TenantPolicyConfig {
 		return f.createPolicy();
 	}
 	
-	@Bean ValidationPolicy<Tenant> tenantUpdatePolicy(TenantPolicyFactory f) {
+	@Bean
+	ValidationPolicy<Tenant> tenantUpdatePolicy(TenantPolicyFactory f) {
 		return f.updatePolicy();
 	}
 }

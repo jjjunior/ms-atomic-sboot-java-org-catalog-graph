@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PolicyResolver {
 	
-	private record Key(Class<?> target, OperationType op) {}
 	private final Map<Key, List<ValidationPolicy<?>>> index = new ConcurrentHashMap<>();
 	
 	public PolicyResolver(List<ValidationPolicy<?>> policies) {
@@ -35,5 +34,11 @@ public class PolicyResolver {
 	
 	public <T> List<ValidationPolicy<T>> getPolicies(OperationType op, Class<T> targetType) {
 		return (List) index.getOrDefault(new Key(targetType, op), List.of());
+	}
+	
+	private record Key(
+		Class<?> target,
+		OperationType op
+	) {
 	}
 }

@@ -8,7 +8,6 @@ import br.com.jstack.org.catalog.graph.framework.adapter.output.node.DomainNode;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
