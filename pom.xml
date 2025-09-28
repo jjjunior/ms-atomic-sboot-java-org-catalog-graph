@@ -5,7 +5,7 @@
     <parent>
         <groupId>br.com.jstack.platform</groupId>
         <artifactId>starter-atomic-neo4j-spring-boot</artifactId>
-        <version>1.0.81</version>
+        <version>1.0.82</version>
     </parent>
 
     <groupId>br.com.jstack.org.catalog.graph</groupId>
@@ -25,6 +25,12 @@
         <!--            <groupId>org.springframework.boot</groupId>-->
         <!--            <artifactId>spring-boot-starter-security</artifactId>-->
         <!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.liquibase.ext</groupId>
+            <artifactId>liquibase-neo4j</artifactId>
+            <version>4.31.0</version>
+        </dependency>
     </dependencies>
 
 </project>
