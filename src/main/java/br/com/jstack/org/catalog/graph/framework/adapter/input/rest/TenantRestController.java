@@ -36,12 +36,14 @@ public class TenantRestController implements TenantsApi {
 	
 	@Override
 	public ResponseEntity<Void> deleteTenant(String tenantId) {
-		return ResponseEntity.status(501).build(); // Not Implemented
+		deleteUseCase.deleteById(tenantId);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
 	public ResponseEntity<ItemResponse> getTenant(String tenantId) {
-		return ResponseEntity.status(501).build(); // Not Implemented
+		Tenant                tenant   = retrieveByIdUseCase.retrieveById(tenantId);
+		return ResponseEntity.ok(new ItemResponse());
 	}
 	
 	@Override
