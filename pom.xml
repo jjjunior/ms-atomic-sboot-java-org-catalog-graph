@@ -5,7 +5,7 @@
     <parent>
         <groupId>br.com.jstack.platform</groupId>
         <artifactId>starter-atomic-neo4j-spring-boot</artifactId>
-        <version>1.0.81</version>
+        <version>1.0.86</version>
     </parent>
 
     <groupId>br.com.jstack.org.catalog.graph</groupId>

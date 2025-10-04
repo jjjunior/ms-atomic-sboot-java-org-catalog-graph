@@ -598,8 +598,8 @@ components:
         @jakarta.validation.constraints.Size(min=3, max=40, message="{br.com.jstack.parameter.capSlug.size}")
         @jakarta.validation.constraints.Pattern(regexp="^[a-z0-9-]{3,40}$", message="{br.com.jstack.parameter.capSlug.regexp}")
 
-    # ---------- Envelope base (compartilhado) ----------
-    EnvelopeBase:
+    # ---------- Catalogo (compartilhado) ----------
+    Catalog:
       type: object
       required: [ apiVersion, kind, metadata, spec ]
       properties:
@@ -694,7 +694,7 @@ components:
     # ---------- Requests ----------
     TenantRequest:
       allOf:
-        - $ref: '#/components/schemas/EnvelopeBase'
+        - $ref: '#/components/schemas/Catalog'
         - type: object
           properties:
             kind:
@@ -720,7 +720,7 @@ components:
 
     DomainRequest:
       allOf:
-        - $ref: '#/components/schemas/EnvelopeBase'
+        - $ref: '#/components/schemas/Catalog'
         - type: object
           properties:
             kind:
@@ -750,7 +750,7 @@ components:
 
     SubdomainRequest:
       allOf:
-        - $ref: '#/components/schemas/EnvelopeBase'
+        - $ref: '#/components/schemas/Catalog'
         - type: object
           properties:
             kind:
@@ -782,7 +782,7 @@ components:
 
     CapabilityRequest:
       allOf:
-        - $ref: '#/components/schemas/EnvelopeBase'
+        - $ref: '#/components/schemas/Catalog'
         - type: object
           properties:
             kind:

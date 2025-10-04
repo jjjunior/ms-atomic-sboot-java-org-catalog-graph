@@ -1,5 +1,7 @@
 package br.com.jstack.org.catalog.graph.framework.adapter.input.rest;
 
+import java.util.List;
+
 import br.com.jstack.org.catalog.graph.api.TenantsApi;
 import br.com.jstack.org.catalog.graph.application.port.input.shared.CreateUseCase;
 import br.com.jstack.org.catalog.graph.application.port.input.shared.DeleteByIdUseCase;
@@ -36,22 +38,33 @@ public class TenantRestController implements TenantsApi {
 	
 	@Override
 	public ResponseEntity<Void> deleteTenant(String tenantId) {
-		return ResponseEntity.status(501).build(); // Not Implemented
+		deleteUseCase.deleteById(tenantId);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
 	public ResponseEntity<ItemResponse> getTenant(String tenantId) {
-		return ResponseEntity.status(501).build(); // Not Implemented
+		Tenant                tenant   = retrieveByIdUseCase.retrieveById(tenantId);
+		return ResponseEntity.ok(new ItemResponse());
 	}
 	
 	@Override
 	public ResponseEntity<PagedListResponse> listTenants(String q, Integer page, Integer size) {
-		return ResponseEntity.status(501).build(); // Not Implemented
+		List<Tenant> tenants = retrieveAllUseCase.retrieveAll();
+//		List<Tenant> responses = businessDomains.stream()
+//			.map(mapper::domainToResponse)
+//			.toList();
+		PagedListResponse response = new PagedListResponse();
+		return ResponseEntity.ok(response);
 	}
 	
 	@Override
 	public ResponseEntity<ItemResponse> updateTenant(String tenantId, TenantRequest tenantRequest) {
-		return ResponseEntity.status(501).build(); // Not Implemented
+		Tenant       tenant   = mapper.requestToDomain(tenantRequest);
+//		tenant.setTenantId(tenantId);
+		Tenant                updated  = updateUseCase.update(tenant);
+		ItemResponse response = mapper.domainToResponse(updated);
+		return ResponseEntity.ok(response);
 	}
 }
 
