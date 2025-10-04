@@ -10,7 +10,7 @@ spring:
     driver-class-name: org.neo4j.jdbc.bolt.BoltDriver
 
   liquigraph:
-    changelog: classpath:/db/liquigraph/000-master.xml
+    changelog: classpath:/db/liquigraph/000-master.yml
     enabled: true
 
 springdoc:
