@@ -13,7 +13,7 @@ spring:
 
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog/000-master.xml
+    change-log: classpath:db/changelog/000-master.yml
 
 springdoc:
   swagger-ui:
